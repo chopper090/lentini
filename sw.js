@@ -1,5 +1,5 @@
 // DaLentini — service worker (offline-first)
-const CACHE = 'dalentini-v1';
+const CACHE = 'lentini-v1.0.0';
 const ASSETS = [
   './', './index.html', './Brand%20Guidelines.html', './Menu%20Generator.html',
   './menu-data.js', './menu-generator.css',
