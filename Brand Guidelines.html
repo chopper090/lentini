@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>DaLentini · Identità Visiva</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#F5EDD8"/>
+  <line x1="20" y1="30" x2="80" y2="30" stroke="#C4A86A" stroke-width="0.6"/>
+  <text x="50" y="58" text-anchor="middle" font-family="Palatino, serif" font-style="italic" font-size="14" fill="#1A1A18">DaLentini</text>
+  <line x1="35" y1="70" x2="65" y2="70" stroke="#C4A86A" stroke-width="0.4"/>
+  <text x="50" y="80" text-anchor="middle" font-family="monospace" font-size="4" letter-spacing="0.5" fill="#8C8880">BRAND GUIDELINES</text>
+</svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --cream:#F5EDD8;
+    --cream-deep:#EFE5C9;
+    --ink:#1A1A18;
+    --gold:#C4A86A;
+    --gold-soft:#D9C28B;
+    --warm-grey:#8C8880;
+    --warm-grey-light:#B8B4AB;
+    --line:#1A1A18;
+    --white:#FFFFFF;
+
+    --f-display:'Palace Script MT','Pinyon Script', cursive;
+    --f-serif:'TeX Gyre Pagella','Palatino Linotype', Palatino,'URW Palladio L','Book Antiqua','Cormorant Garamond', serif;
+    --f-body:'Poppins', system-ui, sans-serif;
+    --f-cjk:'Noto Serif JP', serif;
+    --f-mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.55;
+  }
+
+  /* ============ PAGE SHELL ============ */
+  .page{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 96px) clamp(28px, 7vw, 110px) 120px;
+  }
+
+  /* ============ TYPOGRAPHY ============ */
+  .display{
+    font-family: var(--f-display);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .serif{ font-family: var(--f-serif); font-weight: 400; }
+  .serif-italic{ font-family: var(--f-serif); font-style: italic; font-weight: 400;}
+  .body-italic{ font-family: var(--f-body); font-style: italic; font-weight: 300; }
+  .mono{ font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm-grey);}
+
+  .eyebrow{
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width: 36px;
+    height: 1px;
+    background: var(--gold);
+    display:inline-block;
+  }
+
+  /* ============ COVER ============ */
+  .cover{
+    min-height: calc(100vh - 80px);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 28px 0 28px;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+    margin-bottom: 96px;
+  }
+  .cover-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .cover-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 0;
+  }
+  .wordmark{
+    font-family: var(--f-display);
+    font-size: clamp(80px, 14vw, 220px);
+    line-height: 0.9;
+    color: var(--ink);
+  }
+  .wordmark .cap{ font-size: 1.08em; }
+  .cover-tagline{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: clamp(15px, 1.5vw, 18px);
+    color: var(--warm-grey);
+    margin-top: 36px;
+    letter-spacing: 0.04em;
+  }
+  .cover-rule{
+    width: 1px;
+    height: 60px;
+    background: var(--gold);
+    margin: 28px auto 0;
+  }
+  .cover-bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .cover-bottom .doc-title{
+    font-family: var(--f-serif);
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  /* ============ SECTION ============ */
+  section{
+    margin-top: 120px;
+    scroll-margin-top: 60px;
+  }
+  section:first-of-type{ margin-top: 0; }
+
+  .section-head{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    margin-bottom: 64px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .section-head .num{
+    font-family: var(--f-serif);
+    font-style: italic;
+    color: var(--gold);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+  }
+  .section-head .title{
+    font-family: var(--f-serif);
+    font-size: clamp(32px, 4.2vw, 56px);
+    line-height: 1.05;
+    font-weight: 400;
+    color: var(--ink);
+    margin-top: 18px;
+  }
+  .section-head .intro{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 56ch;
+    margin-top: 8px;
+  }
+
+  /* ============ CONCEPT ============ */
+  .concept-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+  .concept-grid p{
+    font-family: var(--f-serif);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .concept-grid p + p{ margin-top: 18px; }
+  .pillars{
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    padding-top: 40px;
+    border-top: 1px solid var(--gold);
+  }
+  .pillar .label{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    margin-bottom: 14px;
+  }
+  .pillar .word{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink);
+  }
+
+  /* ============ LOGO ============ */
+  .logo-grid{
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+  }
+  .logo-card{
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 320px;
+    position: relative;
+  }
+  .logo-card.dark{ background: var(--ink); }
+  .logo-card.cream{ background: var(--cream-deep); border-color: color-mix(in srgb, var(--ink) 10%, transparent);}
+  .logo-card.white{ background: var(--white); }
+  .logo-card .meta{
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .logo-card.dark .meta{ color: var(--warm-grey-light);}
+  .logo-card .wm{
+    font-family: var(--f-display);
+    font-size: 96px;
+    line-height: 0.9;
+    color: var(--ink);
+  }
+  .logo-card.dark .wm{ color: var(--gold);}
+  .logo-card .monogram{
+    font-family: var(--f-display);
+    font-size: 140px;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .logo-card.dark .monogram{ color: var(--gold);}
+  .logo-card.dark .wm-h{ color: var(--white);}
+  .logo-card .wm-h{ font-family: var(--f-display); font-size: 76px; line-height: 1; color: var(--ink);}
+  .logo-card .h-rule{
+    width: 1px;
+    height: 50px;
+    background: var(--gold);
+    margin: 0 22px;
+  }
+  .logo-horizontal{ display: flex; align-items: center; gap: 0;}
+  .logo-horizontal .stamp{
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .logo-h-wrap{ grid-column: 1 / -1; }
+
+  .logo-rules{
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    padding-top: 32px;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .rule .rule-head{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .rule .rule-body{
+    font-family: var(--f-serif);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  /* ============ COLORS ============ */
+  .palette-primary{
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .swatch{
+    aspect-ratio: 4 / 5;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border-right: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .swatch:last-child{ border-right: none; }
+  .swatch .label{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 19px;
+  }
+  .swatch .vals{
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.8;
+  }
+  .swatch.cream{ background: var(--cream); color: var(--ink);}
+  .swatch.ink{ background: var(--ink); color: var(--cream);}
+  .swatch.gold{ background: var(--gold); color: var(--ink);}
+  .swatch.warm-grey{ background: var(--warm-grey); color: var(--cream);}
+  .swatch.white{ background: var(--white); color: var(--ink);}
+  .swatch.cream-deep{ background: var(--cream-deep); color: var(--ink);}
+
+  .palette-secondary{
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+
+  .palette-usage{
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding-top: 32px;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .usage h4{
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 19px;
+    margin-bottom: 18px;
+  }
+  .usage ul{ list-style: none; padding: 0;}
+  .usage li{
+    font-family: var(--f-serif);
+    font-size: 15.5px;
+    line-height: 1.65;
+    padding: 10px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .usage li:last-child{ border-bottom: none; }
+  .usage li .pct{
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    min-width: 38px;
+  }
+
+  .ratio-bar{
+    margin-top: 60px;
+    height: 56px;
+    display: flex;
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .ratio-bar > div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .ratio-bar .r-cream{ flex: 60; background: var(--cream); color: var(--warm-grey);}
+  .ratio-bar .r-ink{ flex: 30; background: var(--ink); color: var(--cream);}
+  .ratio-bar .r-warm{ flex: 8; background: var(--warm-grey); color: var(--cream);}
+  .ratio-bar .r-gold{ flex: 2; background: var(--gold); color: var(--ink);}
+
+  /* ============ TYPOGRAPHY ============ */
+  .type-card{
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    padding: 48px 0;
+    display: grid;
+    grid-template-columns: 1fr 2.4fr;
+    gap: 48px;
+  }
+  .type-card:last-child{ border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);}
+  .type-meta .type-role{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .type-meta .type-name{
+    font-family: var(--f-serif);
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .type-meta .type-fallback{
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: var(--warm-grey);
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .type-meta .type-usage{
+    margin-top: 18px;
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .type-sample-display{
+    font-family: var(--f-display);
+    font-size: clamp(90px, 11vw, 160px);
+    line-height: 0.92;
+  }
+  .type-sample-serif{
+    font-family: var(--f-serif);
+    font-size: 56px;
+    line-height: 1.1;
+    font-weight: 400;
+  }
+  .type-sample-body{
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .type-sample-cjk{
+    font-family: var(--f-cjk);
+    font-weight: 300;
+    font-size: 110px;
+    line-height: 1;
+  }
+  .alphabet{
+    margin-top: 22px;
+    font-size: 14px;
+    font-family: var(--f-mono);
+    color: var(--warm-grey);
+    line-height: 1.8;
+    word-break: break-all;
+  }
+  .alphabet.serif-show{ font-family: var(--f-serif); font-size: 18px; color: var(--ink); letter-spacing: 0.02em;}
+  .alphabet.display-show{ font-family: var(--f-display); font-size: 36px; color: var(--ink); line-height: 1.3; letter-spacing: 0;}
+  .alphabet.body-show{ font-family: var(--f-body); font-size: 14px; color: var(--ink); font-weight: 300; font-style: italic;}
+
+  .scale-table{
+    margin-top: 40px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .scale-table th, .scale-table td{
+    text-align: left;
+    padding: 14px 10px;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+    vertical-align: baseline;
+  }
+  .scale-table th{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    font-weight: 400;
+  }
+  .scale-table td.example{ font-family: var(--f-serif); }
+  .scale-table td.spec{
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--warm-grey);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  /* ============ HIERARCHY MOCK ============ */
+  .hierarchy-mock{
+    margin-top: 56px;
+    padding: 80px 60px;
+    background: var(--cream-deep);
+    text-align: center;
+    border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+  .hierarchy-mock .h-section-name{
+    font-family: var(--f-display);
+    font-size: 84px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .hierarchy-mock .h-sub{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 50px;
+  }
+  .hierarchy-mock .h-dish{
+    font-family: var(--f-serif);
+    font-size: 26px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .hierarchy-mock .h-desc{
+    font-family: var(--f-body);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 14.5px;
+    color: var(--warm-grey);
+    max-width: 46ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .hierarchy-mock .h-rule{
+    width: 1px;
+    height: 28px;
+    background: var(--gold);
+    margin: 36px auto;
+  }
+  .hier-callouts{
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .hier-callout{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    border-top: 1px solid var(--gold);
+    padding-top: 12px;
+  }
+  .hier-callout .v{ color: var(--ink); display:block; margin-top: 4px; letter-spacing: 0.06em; }
+
+  /* ============ FILETTI ============ */
+  .filetti-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+  }
+  .filetto-sample{
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    padding: 40px;
+    background: var(--white);
+  }
+  .filetto-sample .l1{ height: 0.3pt; background: var(--gold); margin: 18px 0;}
+  .filetto-sample .l2{ height: 0.5pt; background: var(--gold); margin: 18px 0;}
+  .filetto-sample .l3{ height: 1px; background: var(--gold); margin: 18px 0;}
+  .filetto-sample .l-double{ border-top: 0.5pt solid var(--gold); border-bottom: 0.5pt solid var(--gold); height: 6px; margin: 18px 0;}
+  .filetto-sample .l-vert{
+    width: 0.5pt; height: 60px; background: var(--gold); margin: 0 auto;
+  }
+  .filetto-sample .l-ornament{
+    display: flex; align-items: center; gap: 18px; margin: 18px 0;
+  }
+  .filetto-sample .l-ornament span{ flex: 1; height: 0.3pt; background: var(--gold);}
+  .filetto-sample .l-ornament em{
+    font-family: var(--f-serif); font-style: italic; color: var(--gold); font-size: 18px;
+  }
+  .filetto-sample .caption{
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--warm-grey);
+  }
+
+  /* ============ PHOTO STYLE ============ */
+  .photo-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .photo-placeholder{
+    aspect-ratio: 4 / 5;
+    background:
+      repeating-linear-gradient(135deg, transparent 0 18px, color-mix(in srgb, var(--warm-grey) 18%, transparent) 18px 19px),
+      var(--white);
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .photo-placeholder .caption{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    background: var(--white);
+    padding: 8px 12px;
+    border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+  .photo-rules{
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px 80px;
+  }
+  .photo-rule h4{
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .photo-rule p{
+    font-family: var(--f-serif);
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  .photo-rule .tag{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  /* ============ DON'TS ============ */
+  .donts{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .dont{
+    padding: 32px;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    min-height: 130px;
+    border-right: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+  .dont .x{
+    font-family: var(--f-serif);
+    font-size: 24px;
+    color: var(--gold);
+    position: absolute;
+    top: 20px;
+    right: 26px;
+    line-height: 1;
+  }
+  .dont h5{
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ink);
+    margin-right: 30px;
+  }
+  .dont p{
+    font-family: var(--f-body);
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--warm-grey);
+    line-height: 1.6;
+  }
+
+  /* ============ APPS PREVIEW ============ */
+  .apps-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .app-card{
+    border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    background: var(--white);
+    aspect-ratio: 1 / 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    overflow: hidden;
+  }
+  .app-card.ig-portrait{ aspect-ratio: 4 / 5; }
+  .app-card.menu-cover{ aspect-ratio: 210 / 297; background: var(--cream);}
+  .app-card .app-tag{
+    position: absolute;
+    top: 14px;
+    left: 18px;
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .app-card .ig-wm{
+    font-family: var(--f-display);
+    font-size: 64px;
+    line-height: 0.9;
+    color: var(--ink);
+    text-align: center;
+  }
+  .app-card .ig-sub{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 28px;
+  }
+  .app-card .ig-meta{
+    position: absolute;
+    bottom: 22px;
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--warm-grey);
+  }
+  .app-card.menu-cover .mcover-rule-top{
+    position: absolute; top: 30%; left: 18%; right: 18%; height: 0.5px; background: var(--gold);
+  }
+  .app-card.menu-cover .mcover-rule-bot{
+    position: absolute; bottom: 30%; left: 18%; right: 18%; height: 0.5px; background: var(--gold);
+  }
+  .app-card.menu-cover .mc-name{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 22px;
+    margin-top: 14px;
+  }
+  .app-card.menu-cover .mc-portate{
+    margin-top: 10px;
+    font-family: var(--f-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .app-card.menu-cover .mc-wm{
+    font-family: var(--f-display);
+    font-size: 56px;
+    line-height: 1;
+  }
+
+  /* ============ NAV ============ */
+  .top-nav{
+    position: sticky;
+    top: 0;
+    background: color-mix(in srgb, var(--cream) 92%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+  .top-nav-inner{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px clamp(28px, 7vw, 110px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+  }
+  .top-nav .brand{
+    font-family: var(--f-display);
+    font-size: 28px;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .top-nav ul{
+    list-style: none;
+    display: flex;
+    gap: 22px;
+  }
+  .top-nav a{
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    text-decoration: none;
+    transition: color .15s ease;
+  }
+  .top-nav a:hover{ color: var(--ink);}
+  .open-generator{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 16px;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: all .15s ease;
+  }
+  .open-generator:hover{ background: var(--cream); color: var(--ink); }
+
+  /* ============ FOOTER ============ */
+  footer{
+    margin-top: 140px;
+    padding-top: 40px;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  footer .f-brand{
+    font-family: var(--f-display);
+    font-size: 26px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink);
+  }
+
+  @media (max-width: 860px){
+    .concept-grid, .palette-usage, .photo-rules, .apps-grid{ grid-template-columns: 1fr;}
+    .pillars{ grid-template-columns: repeat(2, 1fr);}
+    .palette-primary{ grid-template-columns: 1fr 1fr;}
+    .palette-primary .swatch{ border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);}
+    .type-card{ grid-template-columns: 1fr; gap: 24px;}
+    .donts{ grid-template-columns: 1fr;}
+    .photo-grid{ grid-template-columns: 1fr 1fr;}
+    .section-head{ grid-template-columns: 1fr; gap: 18px;}
+    .logo-grid{ grid-template-columns: 1fr;}
+    .top-nav ul{ display: none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <a href="#cover" class="brand">DaLentini</a>
+    <ul>
+      <li><a href="#concept">Concept</a></li>
+      <li><a href="#logo">Logo</a></li>
+      <li><a href="#colori">Colori</a></li>
+      <li><a href="#tipografia">Tipografia</a></li>
+      <li><a href="#filetti">Filetti</a></li>
+      <li><a href="#fotografia">Foto</a></li>
+      <li><a href="#applicazioni">App</a></li>
+    </ul>
+    <a href="Menu Generator.html" class="open-generator">Apri Generatore Menù →</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- ====================== COVER ====================== -->
+  <header class="cover" id="cover">
+    <div class="cover-top">
+      <span>Documento Identità · 01</span>
+      <span>v 1.1 — 05/2026</span>
+    </div>
+    <div class="cover-center">
+      <span class="eyebrow">Home Restaurant · Messina</span>
+      <div class="wordmark" style="margin-top: 36px;">DaLentini</div>
+      <div class="cover-rule"></div>
+      <div class="cover-tagline">Otto coperti. Una tavola. Una sera.</div>
+    </div>
+    <div class="cover-bottom">
+      <span>chef-patron Marco Lentini</span>
+      <span class="doc-title">Identità Visiva &amp; Sistema di Design</span>
+      <span>Riservato / interno</span>
+    </div>
+  </header>
+
+  <!-- ====================== CONCEPT ====================== -->
+  <section id="concept">
+    <div class="section-head">
+      <div>
+        <div class="num">01 — Anima</div>
+        <h2 class="title">Un'esperienza,<br>non una cucina.</h2>
+      </div>
+      <p class="intro">DaLentini non vende un tipo di cibo. Vende un tipo di esperienza: rara, curata, irripetibile. L'identità visiva deve contenere qualsiasi cucina senza appartenere a nessuna.</p>
+    </div>
+
+    <div class="concept-grid">
+      <div>
+        <p>Otto coperti per serata, sempre su prenotazione. Gli ospiti non scelgono dal menu — trovano un menu già scritto, pensato interamente dallo chef per quella sera.</p>
+        <p>Più menu disponibili, con numero di portate differenti, categorizzati come fusion o tematici. La cucina è un mezzo: il soggetto è il rito.</p>
+      </div>
+      <div>
+        <p>Il sistema visivo è volutamente aperto. Niente simboli che leghino il brand a una tradizione gastronomica specifica: nessuna pasta stilizzata, nessuna ciotola di ramen, nessun ulivo, nessuna katana.</p>
+        <p>Restano la calligrafia, il bianco-crema, il nero caldo, l'oro sottile. Una grammatica adatta a contenere — di sera in sera — qualsiasi racconto.</p>
+      </div>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar"><div class="label">01</div><div class="word">Intimo</div></div>
+      <div class="pillar"><div class="label">02</div><div class="word">Esclusivo</div></div>
+      <div class="pillar"><div class="label">03</div><div class="word">Sofisticato</div></div>
+      <div class="pillar"><div class="label">04</div><div class="word">Contemporaneo</div></div>
+      <div class="pillar"><div class="label">05</div><div class="word">Sensoriale</div></div>
+    </div>
+  </section>
+
+  <!-- ====================== LOGO ====================== -->
+  <section id="logo">
+    <div class="section-head">
+      <div>
+        <div class="num">02 — Marchio</div>
+        <h2 class="title">Wordmark<br>calligrafico.</h2>
+      </div>
+      <p class="intro">Un'unica firma calligrafica: il nome scritto a mano in Palace Script MT. Il marchio è la grafia stessa — non porta orpelli, non chiede compagnia.</p>
+    </div>
+
+    <div class="logo-grid">
+      <div class="logo-card cream" style="grid-column: 1 / -1; min-height: 380px;">
+        <span class="meta">Primaria — cream</span>
+        <div class="wm" style="font-size: 160px;">DaLentini</div>
+      </div>
+      <div class="logo-card dark">
+        <span class="meta">Invertita — premium</span>
+        <div class="wm">DaLentini</div>
+      </div>
+      <div class="logo-card white">
+        <span class="meta">Monogramma — avatar social, stamp</span>
+        <div class="monogram">DL</div>
+      </div>
+      <div class="logo-h-wrap logo-card cream">
+        <span class="meta">Orizzontale — bio, header sito</span>
+        <div class="logo-horizontal">
+          <div class="wm-h">DaLentini</div>
+          <div class="h-rule"></div>
+          <div class="stamp">Home Restaurant<br>Messina · est. 2024</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-rules">
+      <div class="rule">
+        <div class="rule-head">Area di rispetto</div>
+        <div class="rule-body">Lo spazio libero attorno al logo è pari all'altezza della "L" maiuscola. Mai meno.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-head">Dimensione minima</div>
+        <div class="rule-body">Stampa: 24 mm di larghezza. Schermo: 120 px. Sotto questa soglia, usare il monogramma DL.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-head">Colore</div>
+        <div class="rule-body">Solo nero profondo (#1A1A18) o oro antico (#C4A86A). Mai bianco puro su crema, mai altri colori.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== COLORI ====================== -->
+  <section id="colori">
+    <div class="section-head">
+      <div>
+        <div class="num">03 — Colori</div>
+        <h2 class="title">Crema, nero,<br>e un filo d'oro.</h2>
+      </div>
+      <p class="intro">Una palette ristretta — meno di quattro colori per superficie. Il crema e il nero fanno il lavoro pesante. L'oro entra solo dove serve un tocco di preziosità.</p>
+    </div>
+
+    <div class="palette-primary">
+      <div class="swatch cream">
+        <div class="label">Crema caldo</div>
+        <div class="vals">
+          HEX&nbsp; #F5EDD8<br>
+          RGB&nbsp; 245 · 237 · 216<br>
+          CMYK&nbsp; 3 · 5 · 16 · 0<br>
+          Pantone&nbsp; 7527 C
+        </div>
+      </div>
+      <div class="swatch ink">
+        <div class="label">Nero profondo</div>
+        <div class="vals">
+          HEX&nbsp; #1A1A18<br>
+          RGB&nbsp; 26 · 26 · 24<br>
+          CMYK&nbsp; 70 · 65 · 65 · 90<br>
+          Pantone&nbsp; Black 6 C
+        </div>
+      </div>
+      <div class="swatch gold">
+        <div class="label">Oro antico</div>
+        <div class="vals">
+          HEX&nbsp; #C4A86A<br>
+          RGB&nbsp; 196 · 168 · 106<br>
+          CMYK&nbsp; 22 · 30 · 65 · 5<br>
+          Pantone&nbsp; 4525 C
+        </div>
+      </div>
+      <div class="swatch warm-grey">
+        <div class="label">Grigio caldo</div>
+        <div class="vals">
+          HEX&nbsp; #8C8880<br>
+          RGB&nbsp; 140 · 136 · 128<br>
+          CMYK&nbsp; 45 · 38 · 45 · 18<br>
+          Pantone&nbsp; Warm Grey 7 C
+        </div>
+      </div>
+    </div>
+
+    <div class="palette-secondary">
+      <div class="swatch white">
+        <div class="label">Bianco puro</div>
+        <div class="vals">
+          HEX&nbsp; #FFFFFF · uso fotografico, sfondi premium
+        </div>
+      </div>
+      <div class="swatch cream-deep">
+        <div class="label">Crema profondo</div>
+        <div class="vals">
+          HEX&nbsp; #EFE5C9 · alternative tonali, schede secondarie
+        </div>
+      </div>
+    </div>
+
+    <div class="palette-usage">
+      <div class="usage">
+        <h4>Distribuzione consigliata</h4>
+        <ul>
+          <li><span class="pct">60%</span> Crema caldo — fondo dominante, respiro</li>
+          <li><span class="pct">30%</span> Nero profondo — testi, titoli, contrasto</li>
+          <li><span class="pct">8%</span> Grigio caldo — descrizioni, dettagli secondari</li>
+          <li><span class="pct">2%</span> Oro antico — filetti, accenti, prezzo</li>
+        </ul>
+      </div>
+      <div class="usage">
+        <h4>Regole d'uso</h4>
+        <ul>
+          <li>Mai più di tre colori per superficie.</li>
+          <li>L'oro non è mai per blocchi di testo. Solo filetti e accenti.</li>
+          <li>Su sfondo nero, usare l'oro per il logo; crema per il testo.</li>
+          <li>Niente gradienti. Niente colori al di fuori della palette.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ratio-bar">
+      <div class="r-cream">60%</div>
+      <div class="r-ink">30%</div>
+      <div class="r-warm">8%</div>
+      <div class="r-gold">2%</div>
+    </div>
+  </section>
+
+  <!-- ====================== TIPOGRAFIA ====================== -->
+  <section id="tipografia">
+    <div class="section-head">
+      <div>
+        <div class="num">04 — Tipografia</div>
+        <h2 class="title">Quattro voci<br>in gerarchia.</h2>
+      </div>
+      <p class="intro">Una calligrafia per il nome. Un serif per il piatto. Un sans corsivo per il dettaglio. Un ideogramma — solo quando ha qualcosa da dire.</p>
+    </div>
+
+    <div class="type-card">
+      <div class="type-meta">
+        <div class="type-role">01 / Display</div>
+        <div class="type-name">Palace Script MT</div>
+        <div class="type-fallback">Fallback web: 'Pinyon Script'<br>System: Palace Script MT</div>
+        <div class="type-usage">Solo per il nome del ristorante e i titoli di sezione maggiori. Maiuscolo iniziale, corpo ampio, tracking zero.</div>
+      </div>
+      <div>
+        <div class="type-sample-display">DaLentini</div>
+        <div class="alphabet display-show">A B C D E F G &nbsp; a b c d e f g &nbsp; &amp;</div>
+      </div>
+    </div>
+
+    <div class="type-card">
+      <div class="type-meta">
+        <div class="type-role">02 / Heading</div>
+        <div class="type-name">TeX Gyre Pagella</div>
+        <div class="type-fallback">Fallback: Palatino Linotype, Palatino, URW Palladio L, Book Antiqua, Cormorant Garamond</div>
+        <div class="type-usage">Serif classico, elegante. Per nomi dei piatti e titoli di sezione. Regular o Italic per enfasi.</div>
+      </div>
+      <div>
+        <div class="type-sample-serif">Tartare di tonno rosso</div>
+        <div class="type-sample-serif" style="font-style: italic; color: var(--warm-grey); margin-top: 12px;">Risotto al limone candito</div>
+        <div class="alphabet serif-show">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</div>
+        <div class="alphabet serif-show" style="font-style: italic;">a b c d e f g h i j k l m n o p q r s t u v w x y z</div>
+      </div>
+    </div>
+
+    <div class="type-card">
+      <div class="type-meta">
+        <div class="type-role">03 / Corpo testo</div>
+        <div class="type-name">Poppins Light Italic</div>
+        <div class="type-fallback">Web Google Fonts · weight 300, italic</div>
+        <div class="type-usage">Per descrizioni ingredienti e note dello chef. Leggero e aereo, contrasta con la densità del serif.</div>
+      </div>
+      <div>
+        <div class="type-sample-body">Capperi di Pantelleria, olio Tonda Iblea, scaglia di bottarga affumicata e zest di limone candito.</div>
+        <div class="alphabet body-show">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z &nbsp; 0 1 2 3 4 5 6 7 8 9</div>
+      </div>
+    </div>
+
+    <div class="type-card">
+      <div class="type-meta">
+        <div class="type-role">04 / Accento opzionale</div>
+        <div class="type-name">Noto Serif CJK JP</div>
+        <div class="type-fallback">Web: 'Noto Serif JP' · weight 200/300</div>
+        <div class="type-usage">Solo nelle versioni premium o nei menu fusion con componente orientale. Un singolo ideogramma come elemento visivo. Mai in blocchi di testo.</div>
+      </div>
+      <div>
+        <div class="type-sample-cjk">和</div>
+        <div class="mono" style="margin-top: 14px;">Esempio · 和 (wa) — armonia</div>
+      </div>
+    </div>
+
+    <!-- HIERARCHY MOCK -->
+    <div class="hierarchy-mock">
+      <div class="h-section-name">Antipasti</div>
+      <div class="h-sub">— Primo Atto —</div>
+      <div class="h-dish">Tartare di tonno rosso</div>
+      <div class="h-desc"><em>capperi di Pantelleria · olio Tonda Iblea<br>bottarga affumicata · zest di limone candito</em></div>
+      <div class="h-rule"></div>
+      <div class="h-dish">Carpaccio di ricciola</div>
+      <div class="h-desc"><em>olio al rosmarino · sale Maldon · pepe rosa</em></div>
+    </div>
+    <div class="hier-callouts">
+      <div class="hier-callout">Nome sezione<span class="v">Palace Script MT · 84pt</span></div>
+      <div class="hier-callout">Nome piatto<span class="v">TeX Gyre Pagella · 26pt</span></div>
+      <div class="hier-callout">Descrizione<span class="v">Poppins Light Italic · 14.5pt</span></div>
+    </div>
+
+    <!-- SCALE TABLE -->
+    <table class="scale-table">
+      <thead>
+        <tr>
+          <th>Ruolo</th>
+          <th>Esempio</th>
+          <th>Famiglia</th>
+          <th>Stile</th>
+          <th>Dim. (stampa)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="spec">Display</td>
+          <td class="example" style="font-family: var(--f-display); font-size: 36px;">DaLentini</td>
+          <td class="spec">Palace Script MT</td>
+          <td class="spec">Regular</td>
+          <td class="spec">96–160 pt</td>
+        </tr>
+        <tr>
+          <td class="spec">Sezione menu</td>
+          <td class="example" style="font-family: var(--f-display); font-size: 28px;">Antipasti</td>
+          <td class="spec">Palace Script MT</td>
+          <td class="spec">Regular</td>
+          <td class="spec">48–72 pt</td>
+        </tr>
+        <tr>
+          <td class="spec">Nome piatto</td>
+          <td class="example" style="font-size: 21px;">Tartare di tonno rosso</td>
+          <td class="spec">TeX Gyre Pagella</td>
+          <td class="spec">Regular</td>
+          <td class="spec">18–22 pt</td>
+        </tr>
+        <tr>
+          <td class="spec">Variante piatto</td>
+          <td class="example" style="font-size: 21px; font-style: italic;">Risotto al limone candito</td>
+          <td class="spec">TeX Gyre Pagella</td>
+          <td class="spec">Italic</td>
+          <td class="spec">18–22 pt</td>
+        </tr>
+        <tr>
+          <td class="spec">Descrizione</td>
+          <td class="example" style="font-family: var(--f-body); font-weight: 300; font-style: italic; font-size: 14px;">capperi di Pantelleria, olio Tonda Iblea</td>
+          <td class="spec">Poppins</td>
+          <td class="spec">Light Italic 300</td>
+          <td class="spec">10–12 pt</td>
+        </tr>
+        <tr>
+          <td class="spec">Caption / numerazione</td>
+          <td class="example" style="font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;">04 portate · €65</td>
+          <td class="spec">JetBrains Mono</td>
+          <td class="spec">Regular</td>
+          <td class="spec">8–10 pt</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ====================== FILETTI ====================== -->
+  <section id="filetti">
+    <div class="section-head">
+      <div>
+        <div class="num">05 — Filetti</div>
+        <h2 class="title">Sottilissimi.<br>Sempre oro.</h2>
+      </div>
+      <p class="intro">I filetti sono la firma silenziosa del sistema. Separano senza dividere, sottolineano senza gridare. Spessore: 0,3–0,5 pt — mai oltre.</p>
+    </div>
+
+    <div class="filetti-grid">
+      <div class="filetto-sample">
+        <div class="caption">Sottile · 0.3 pt</div>
+        <div class="l1"></div>
+        <div class="caption">Standard · 0.5 pt</div>
+        <div class="l2"></div>
+        <div class="caption">Massimo · 1 pt (solo cover)</div>
+        <div class="l3"></div>
+      </div>
+      <div class="filetto-sample">
+        <div class="caption">Doppio filetto · separatore di sezione</div>
+        <div class="l-double"></div>
+        <div class="caption">Ornamentale · con glifo</div>
+        <div class="l-ornament">
+          <span></span>
+          <em>·</em>
+          <span></span>
+        </div>
+        <div class="caption" style="text-align: center; margin-top: 8px;">Verticale · divisore in colofone</div>
+        <div class="l-vert" style="margin-top: 14px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== FOTOGRAFIA ====================== -->
+  <section id="fotografia">
+    <div class="section-head">
+      <div>
+        <div class="num">06 — Fotografia</div>
+        <h2 class="title">Editoriale,<br>silenziosa.</h2>
+      </div>
+      <p class="intro">Stesso rigore della grafica. Sfondi neutri, luce diffusa, nessun elemento di scena: solo il piatto. Il bianco-crema è lo spazio di respiro.</p>
+    </div>
+
+    <div class="photo-grid">
+      <div class="photo-placeholder"><div class="caption">Foto piatto · 4:5</div></div>
+      <div class="photo-placeholder"><div class="caption">Foto piatto · 4:5</div></div>
+      <div class="photo-placeholder"><div class="caption">Foto piatto · 4:5</div></div>
+    </div>
+
+    <div class="photo-rules">
+      <div class="photo-rule">
+        <div class="tag">Sfondi</div>
+        <h4>Bianco puro o marmo bianco.</h4>
+        <p>Mai sfondi colorati, mai tovaglie a motivo. Il piatto vive nel proprio spazio.</p>
+      </div>
+      <div class="photo-rule">
+        <div class="tag">Luce</div>
+        <h4>Diffusa, senza ombre dure.</h4>
+        <p>Una sorgente principale ampia, un riflettore di rimbalzo. Niente luci di taglio drammatiche.</p>
+      </div>
+      <div class="photo-rule">
+        <div class="tag">Prospettiva</div>
+        <h4>3/4 rialzata o laterale bassa.</h4>
+        <p>Due angoli — uno racconta il piatto come paesaggio, l'altro ne mostra l'architettura.</p>
+      </div>
+      <div class="photo-rule">
+        <div class="tag">Scena</div>
+        <h4>Nessun elemento decorativo.</h4>
+        <p>Nessuna posata di scena, nessun ingrediente "fresco" di contorno, nessuna mano umana. Solo il piatto.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== APPLICAZIONI ====================== -->
+  <section id="applicazioni">
+    <div class="section-head">
+      <div>
+        <div class="num">07 — Applicazioni</div>
+        <h2 class="title">Sistema<br>in azione.</h2>
+      </div>
+      <p class="intro">Stessa grammatica, tre supporti. Il template menu è il cuore del sistema — Instagram e header sito ne sono diretta conseguenza.</p>
+    </div>
+
+    <div class="apps-grid">
+      <div class="app-card menu-cover">
+        <div class="app-tag">Cover Menu · A4</div>
+        <div class="mc-wm">DaLentini</div>
+        <div class="mcover-rule-top"></div>
+        <div class="mc-name">Radici</div>
+        <div class="mc-portate">04 portate · €65</div>
+        <div class="mcover-rule-bot"></div>
+      </div>
+      <div class="app-card ig-portrait">
+        <div class="app-tag">Post Instagram · 4:5</div>
+        <div class="ig-wm">DaLentini</div>
+        <div class="ig-sub">— giovedì 22 maggio —</div>
+        <div class="ig-meta">otto coperti · prenotazione</div>
+      </div>
+    </div>
+
+    <p class="mono" style="text-align:center; margin-top: 40px;">
+      — Per generare un menu completo, apri il <a href="Menu Generator.html" style="color: var(--ink); text-decoration: underline; text-underline-offset: 4px;">Generatore Menù</a> —
+    </p>
+  </section>
+
+  <!-- ====================== DON'TS ====================== -->
+  <section id="donts">
+    <div class="section-head">
+      <div>
+        <div class="num">08 — Niente di tutto questo</div>
+        <h2 class="title">Cosa<br>non vogliamo.</h2>
+      </div>
+      <p class="intro">Il sistema è definito tanto da ciò che esclude quanto da ciò che include. Queste sono le linee non superabili.</p>
+    </div>
+
+    <div class="donts">
+      <div class="dont">
+        <span class="x">×</span>
+        <h5>Niente cucine specifiche</h5>
+        <p>Nessun simbolo, font o colore che evochi una sola tradizione gastronomica. Il brand le contiene tutte.</p>
+      </div>
+      <div class="dont">
+        <span class="x">×</span>
+        <h5>Niente sans-serif per i titoli</h5>
+        <p>Solo serif e calligrafico nei livelli alti della gerarchia. Poppins resta confinato alle descrizioni.</p>
+      </div>
+      <div class="dont">
+        <span class="x">×</span>
+        <h5>Niente lusso ostentato</h5>
+        <p>Niente eccesso d'oro, niente effetti foil simulati, niente cornici barocche. L'eleganza è sottrazione.</p>
+      </div>
+      <div class="dont">
+        <span class="x">×</span>
+        <h5>Niente affollamento</h5>
+        <p>Margini minimi 25 mm su tutti i lati. Il bianco-crema è parte attiva del design, non sfondo passivo.</p>
+      </div>
+      <div class="dont">
+        <span class="x">×</span>
+        <h5>Niente gradienti o ombre</h5>
+        <p>Superfici piatte, contorni netti. Nessun effetto digitale che richiami una vetrina commerciale.</p>
+      </div>
+      <div class="dont">
+        <span class="x">×</span>
+        <h5>Niente icone emoji</h5>
+        <p>Allergeni e simboli con tag numerici 1–14 secondo standard UE. Niente decorazioni superflue.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>DaLentini · Identità Visiva</span>
+    <span class="f-brand">DaLentini</span>
+    <span>v 1.1 — 05/2026</span>
+  </footer>
+
+</div>
+
+</body>
+</html>

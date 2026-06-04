@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>DaLentini · Generatore Menù</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="menu-generator.css">
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="#F5EDD8"/>
+  <line x1="20" y1="30" x2="80" y2="30" stroke="#C4A86A" stroke-width="0.6"/>
+  <text x="50" y="58" text-anchor="middle" font-family="Palatino, serif" font-style="italic" font-size="14" fill="#1A1A18">DaLentini</text>
+  <line x1="35" y1="70" x2="65" y2="70" stroke="#C4A86A" stroke-width="0.4"/>
+  <text x="50" y="80" text-anchor="middle" font-family="monospace" font-size="4" letter-spacing="0.5" fill="#8C8880">MENU GENERATOR</text>
+</svg>
+</template>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="menu-data.js"></script>
+<script type="text/babel" src="menu-sheets.jsx"></script>
+<script type="text/babel" src="menu-form.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+function App(){
+  // ---- state ----
+  const [menu, setMenu] = useState(() => {
+    try{
+      const saved = localStorage.getItem("dalentini.menu");
+      if (saved) return normalizeMenu(JSON.parse(saved));
+    } catch(e){}
+    return JSON.parse(JSON.stringify(PRESET_MENUS.radici));
+  });
+  const [variant, setVariant] = useState(() => localStorage.getItem("dalentini.variant") || "contemporaneo");
+
+  const SHEETS = {
+    classico: MenuClassico,
+    contemporaneo: MenuContemporaneo,
+    tabula: MenuTabula,
+    editoriale: MenuEditoriale,
+    diario: MenuDiario
+  };
+  const VLABELS = {
+    classico: "I · Classico",
+    contemporaneo: "II · Contemporaneo",
+    tabula: "III · Tabula",
+    editoriale: "IV · Editoriale",
+    diario: "V · Diario"
+  };
+  const SheetComponent = SHEETS[variant] || MenuContemporaneo;
+  const [zoom, setZoom] = useState(0.55);
+  const previewRef = useRef(null);
+
+  // ---- persistence ----
+  useEffect(() => {
+    try{ localStorage.setItem("dalentini.menu", JSON.stringify(menu)); } catch(e){}
+  }, [menu]);
+  useEffect(() => {
+    localStorage.setItem("dalentini.variant", variant);
+  }, [variant]);
+
+  // ---- preview auto-fit ----
+  useEffect(() => {
+    const calcFit = () => {
+      const pane = previewRef.current;
+      if (!pane) return;
+      // available width = pane width minus 48px padding
+      const avail = pane.clientWidth - 96;
+      // A4 width = 210mm = ~793px at 96dpi
+      const a4w = 210 * 3.7795275591;
+      const target = Math.min(1, avail / a4w);
+      // round to one decimal
+      setZoom(prev => {
+        const next = Math.max(0.3, Math.min(1, Math.round(target * 100) / 100));
+        return next;
+      });
+    };
+    calcFit();
+    window.addEventListener("resize", calcFit);
+    return () => window.removeEventListener("resize", calcFit);
+  }, []);
+
+  // ---- actions ----
+  const loadPreset = (key) => {
+    setMenu(JSON.parse(JSON.stringify(PRESET_MENUS[key])));
+  };
+  const resetMenu = () => {
+    if (confirm("Sostituire il menù corrente con un menu vuoto?")){
+      setMenu(JSON.parse(JSON.stringify(EMPTY_MENU)));
+    }
+  };
+  const exportMenu = (kind) => {
+    if (kind === "json"){
+      const blob = new Blob([JSON.stringify(menu, null, 2)], { type: "application/json" });
+      downloadBlob(blob, `dalentini-${slug(menu.name)}.json`);
+    } else if (kind === "html"){
+      const html = buildStandaloneHTML(menu, variant);
+      const blob = new Blob([html], { type: "text/html" });
+      downloadBlob(blob, `dalentini-${slug(menu.name)}.html`);
+    }
+  };
+  const printMenu = () => window.print();
+
+  const zoomIn = () => setZoom(z => Math.min(1, Math.round((z + 0.05) * 100) / 100));
+  const zoomOut = () => setZoom(z => Math.max(0.3, Math.round((z - 0.05) * 100) / 100));
+
+  return (
+    <div className="app">
+      <Form
+        menu={menu}
+        setMenu={setMenu}
+        variant={variant}
+        setVariant={setVariant}
+        onLoadPreset={loadPreset}
+        onReset={resetMenu}
+        onPrint={printMenu}
+        onExport={exportMenu}
+      />
+      <div className="preview-pane" ref={previewRef}>
+        <div className="preview-toolbar">
+          <div className="ptb-dot"></div>
+          <span>Anteprima A4 · 210 × 297 mm</span>
+          <div className="ptb-spacer"></div>
+          <span>Variante {VLABELS[variant]}</span>
+          <div className="ptb-spacer"></div>
+          <div className="ptb-zoom">
+            <button onClick={zoomOut} title="Zoom out">−</button>
+            <span className="z-val">{Math.round(zoom * 100)}%</span>
+            <button onClick={zoomIn} title="Zoom in">+</button>
+          </div>
+        </div>
+        <div className="sheet-stack" style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}>
+          <SheetComponent menu={menu} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- utility ----
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function slug(s){
+  return (s || "menu")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+function buildStandaloneHTML(menu, variant){
+  return `<!DOCTYPE html>
+<html lang="it"><head><meta charset="UTF-8">
+<title>${menu.name} · DaLentini</title>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="menu-generator.css">
+<style>body{background:white;overflow:visible;height:auto}#root{display:block;height:auto}.sheet{transform:none}.page-A4{margin:0 auto 24px;box-shadow:0 8px 24px rgba(0,0,0,.12)}@media print{.page-A4{box-shadow:none;page-break-after:always;page-break-inside:avoid}.page-A4:last-child{page-break-after:avoid}}</style>
+</head><body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"><\/script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"><\/script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"><\/script>
+<script src="menu-data.js"><\/script>
+<script type="text/babel" src="menu-sheets.jsx"><\/script>
+<script type="text/babel">
+const MENU = ${JSON.stringify(menu, null, 2)};
+const SheetMap = { classico: MenuClassico, contemporaneo: MenuContemporaneo, tabula: MenuTabula, editoriale: MenuEditoriale, diario: MenuDiario };
+const Sheet = SheetMap[${JSON.stringify(variant)}] || MenuContemporaneo;
+ReactDOM.createRoot(document.getElementById("root")).render(<Sheet menu={MENU} />);
+<\/script>
+</body></html>`;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

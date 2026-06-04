@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>DaLentini · Sistema</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --cream:#F5EDD8;
+    --ink:#1A1A18;
+    --gold:#C4A86A;
+    --warm-grey:#8C8880;
+    --f-display:'Palace Script MT','Pinyon Script', cursive;
+    --f-serif:'Cormorant Garamond','Palatino Linotype', Palatino, serif;
+    --f-body:'Poppins', system-ui, sans-serif;
+    --f-mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+  *{ box-sizing: border-box; margin: 0; padding: 0;}
+  body{
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-weight: 300;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+  }
+  .page{
+    flex: 1;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 60px 48px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 80px;
+  }
+  header{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    padding-bottom: 24px;
+  }
+  .brand{
+    font-family: var(--f-display);
+    font-size: 56px;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .stamp{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .hero{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 60px 0 20px;
+  }
+  .eyebrow{
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 26px;
+  }
+  .hero h1{
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.05;
+    max-width: 14ch;
+    text-wrap: balance;
+  }
+  .hero p{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.5vw, 19px);
+    color: var(--warm-grey);
+    max-width: 52ch;
+    margin-top: 22px;
+    line-height: 1.6;
+  }
+  .hero-rule{
+    width: 1px; height: 50px;
+    background: var(--gold);
+    margin: 32px 0 14px;
+  }
+
+  .cards{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 36px;
+  }
+  .card{
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+    padding: 40px 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: color-mix(in srgb, var(--cream) 60%, white);
+    transition: all .2s ease;
+    position: relative;
+    min-height: 260px;
+  }
+  .card:hover{
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+  .card:hover .num{ color: var(--gold);}
+  .card:hover .arrow{ color: var(--gold);}
+  .card:hover .meta{ color: color-mix(in srgb, var(--cream) 70%, transparent);}
+  .num{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    transition: color .2s;
+  }
+  .card h2{
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .card .desc{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.55;
+    margin-top: 2px;
+    flex: 1;
+    text-wrap: pretty;
+  }
+  .card .meta{
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    transition: color .2s;
+  }
+  .card .arrow{
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+    transition: color .2s;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  footer{
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+
+  @media (max-width: 760px){
+    .cards{ grid-template-columns: 1fr;}
+    .page{ padding: 40px 24px; gap: 50px;}
+    .brand{ font-size: 42px;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <span class="brand">DaLentini</span>
+    <span class="stamp">Home Restaurant · Messina<br>chef-patron Marco Lentini</span>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="eyebrow">— Sistema di Design · v 1.1 —</div>
+      <h1>Otto coperti.<br/>Una tavola.<br/>Una sera.</h1>
+      <div class="hero-rule"></div>
+      <p>Identità visiva e generatore di menu per <em>DaLentini</em>. Apri le linee guida per consultare colori, font e regole. Apri il generatore per creare un nuovo menu pronto per la stampa.</p>
+    </div>
+
+    <div class="cards">
+      <a href="Brand Guidelines.html" class="card">
+        <div class="num">01 — Documento</div>
+        <h2>Brand Guidelines</h2>
+        <div class="desc">L'identità visiva completa. Concept, logo, palette, tipografia, filetti, stile fotografico e applicazioni.</div>
+        <div class="meta">
+          <span>HTML · scroll editoriale</span>
+          <span class="arrow">Apri →</span>
+        </div>
+      </a>
+      <a href="Menu Generator.html" class="card">
+        <div class="num">02 — Strumento</div>
+        <h2>Generatore Menù</h2>
+        <div class="desc">Form a sinistra, anteprima A4 a destra. Due varianti (Classico, Contemporaneo) e tre menu già impostati come esempio.</div>
+        <div class="meta">
+          <span>Live · stampa PDF</span>
+          <span class="arrow">Apri →</span>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <span>DaLentini · sistema interno</span>
+    <span>v 1.1 — maggio 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>

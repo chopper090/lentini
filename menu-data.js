@@ -1,0 +1,220 @@
+// ============================================================
+// DaLentini · Menu data — esempi precaricati + standard allergeni
+// v 1.2 — aggiunti campi 'story' (racconto) e 'image' (foto)
+// ============================================================
+
+const ALLERGENI = [
+  { n: 1,  label: "Glutine" },
+  { n: 2,  label: "Crostacei" },
+  { n: 3,  label: "Uova" },
+  { n: 4,  label: "Pesce" },
+  { n: 5,  label: "Arachidi" },
+  { n: 6,  label: "Soia" },
+  { n: 7,  label: "Latte / latticini" },
+  { n: 8,  label: "Frutta a guscio" },
+  { n: 9,  label: "Sedano" },
+  { n: 10, label: "Senape" },
+  { n: 11, label: "Sesamo" },
+  { n: 12, label: "Solfiti" },
+  { n: 13, label: "Lupini" },
+  { n: 14, label: "Molluschi" }
+];
+
+const MENU_RADICI = {
+  name: "Radici",
+  category: "tematico",
+  date: "2026-05-22",
+  price: 65,
+  chef: "Marco Lentini",
+  seats: 8,
+  chefNote: "Una sera di sole eccellenze siciliane, dalla terra al mare.",
+  dishes: [
+    {
+      name: "Tartare di tonno rosso",
+      desc: "capperi di Pantelleria, olio Tonda Iblea, bottarga affumicata, zest di limone candito",
+      story: "Il tonno arriva alla mattina dal porto di Messina, ancora ricoperto di brina. Lo taglio a mano, freddo, e lo lascio respirare con un filo di Tonda Iblea. La bottarga si fuma sul piatto all'ultimo secondo.",
+      image: null,
+      allergens: [4, 12]
+    },
+    {
+      name: "Risotto al limone candito",
+      desc: "gambero rosso di Mazara, bottarga di muggine, foglie di nasturzio",
+      story: "Cuocio il riso solo con l'acqua del limone, niente brodo. Il candito lo preparo la notte prima, lentamente, perché perda l'amaro e tenga il profumo. Il gambero rosso entra crudo, all'uscita.",
+      image: null,
+      allergens: [2, 4, 7]
+    },
+    {
+      name: "Branzino in crosta di sale",
+      desc: "finocchietto selvatico, arancia di Ribera, olio di alloro affumicato",
+      story: "Pesca della notte. La crosta di sale arriva intera in tavola, si apre con un colpo secco davanti agli ospiti. Sotto, il pesce è ancora caldo e umido — il finocchietto è cresciuto al confine del giardino.",
+      image: null,
+      allergens: [4]
+    },
+    {
+      name: "Cassata destrutturata",
+      desc: "ricotta di bufala dei Nebrodi, pistacchio di Bronte, gel di mandarino tardivo",
+      story: "La cassata di mia nonna, scomposta. Niente pasta reale. Solo ricotta freschissima, montata leggera, e pistacchio crudo grattugiato sopra come neve.",
+      image: null,
+      allergens: [1, 3, 7, 8]
+    }
+  ]
+};
+
+const MENU_SAKURA = {
+  name: "Sakura",
+  category: "fusion",
+  date: "2026-06-12",
+  price: 95,
+  chef: "Marco Lentini",
+  seats: 8,
+  chefNote: "Sei passi tra Mediterraneo e Oriente. Stessi gesti, lingue diverse.",
+  dishes: [
+    {
+      name: "Ostrica e yuzu",
+      desc: "ostrica di Belon, granita di yuzu, ponzu allo zenzero, fiore di sakura",
+      story: "L'ostrica si apre un istante prima di entrare in tavola. La granita di yuzu si scioglie nel guscio, si mescola al sale dell'acqua di mare. Si beve, non si mangia.",
+      image: null,
+      allergens: [4, 6, 14]
+    },
+    {
+      name: "Sashimi di ricciola",
+      desc: "salsa di soia agli agrumi, wasabi fresco, daikon marinato, sesamo tostato",
+      story: "Ricciola messinese, pescata all'amo. La servo dopo dieci minuti di riposo sotto un sale al limone, perché la carne si distenda. Daikon e wasabi grattugiati al momento.",
+      image: null,
+      allergens: [4, 6, 11]
+    },
+    {
+      name: "Tagliolini al nero di seppia",
+      desc: "ricci di mare di Sicilia, brodo dashi, olio di kombu, scorza di yuzu",
+      story: "Pasta fresca tirata sottile come una stoffa, colorata col nero. Il dashi è di alga kombu siciliana — sì, esiste — e funghi shiitake. I ricci si aggiungono crudi, alla fine.",
+      image: null,
+      allergens: [1, 3, 4, 14]
+    },
+    {
+      name: "Anguilla laccata al miso",
+      desc: "purea di topinambur, salsa teriyaki ai mandarini, germogli di shiso",
+      story: "Marinata 24 ore in miso bianco e mirin. Cotta sulla brace, laccata tre volte. Il topinambur, sotto, è una purea fatta solo con la sua acqua di cottura.",
+      image: null,
+      allergens: [4, 6, 11]
+    },
+    {
+      name: "Manzo wagyu scottato",
+      desc: "salsa al tartufo nero, riduzione di sakè, fiore di crisantemo",
+      story: "Tre secondi per lato sulla piastra rovente. Riposo lungo, taglio sottile. La salsa al tartufo è ridotta col sakè per giorni — finché diventa quasi nera, lucida, profonda.",
+      image: null,
+      allergens: [6, 12]
+    },
+    {
+      name: "Dorayaki al matcha",
+      desc: "ripieno di anko, gelato al sesamo nero, sciroppo di kuromitsu",
+      story: "Pancake giapponesi alla farina di riso e matcha. Tra i due dischi, una crema di fagioli azuki cotti lentamente con zucchero di canna. Il sesamo nero è tostato a parte.",
+      image: null,
+      allergens: [1, 3, 6, 7, 11]
+    }
+  ]
+};
+
+const MENU_TERRAEMARE = {
+  name: "Terra e Mare",
+  category: "fusion",
+  date: "2026-07-04",
+  price: 130,
+  chef: "Marco Lentini",
+  seats: 8,
+  chefNote: "Otto atti per una sera intera. Il limite tra mare e terra come unico paesaggio.",
+  dishes: [
+    {
+      name: "Amuse-bouche dello chef",
+      desc: "tre piccoli morsi a sorpresa, raccontati al tavolo",
+      story: "Cambiano ogni sera. Sono il modo in cui inizio il discorso.",
+      image: null,
+      allergens: []
+    },
+    {
+      name: "Crudo misto",
+      desc: "scampi di Mazara, gambero rosso, ricciola, olio EVO Nocellara, sale Maldon",
+      story: "Tre crudi, tre temperature. Scampo a 4 gradi, gambero rosso a 8, ricciola a 10. Si mangia in quest'ordine, senza pane.",
+      image: null,
+      allergens: [2, 4]
+    },
+    {
+      name: "Uovo croccante",
+      desc: "fonduta di parmigiano 36 mesi, tartufo nero di Norcia, polvere di pane",
+      story: "L'uovo entra nella pastella di pane raffermo e parmigiano e finisce in olio bollente per 70 secondi esatti. Si rompe a metà, la fonduta fa da letto, il tartufo si grattugia in tavola.",
+      image: null,
+      allergens: [1, 3, 7]
+    },
+    {
+      name: "Spaghettone all'astice",
+      desc: "bisque di crostacei, pomodorino datterino confit, basilico ghiacciato",
+      story: "L'astice viene cotto vivo, smontato, e la sua bisque è la base di tutto. Lo spaghettone si finisce di cuocere nel suo brodo — non in acqua. Il datterino confit dura otto ore in forno.",
+      image: null,
+      allergens: [1, 2, 14]
+    },
+    {
+      name: "Granchio reale",
+      desc: "maionese affumicata, daikon, caviale d'Aquitania, foglie di acetosella",
+      story: "Granchio reale norvegese, polpa cruda macerata in succo di lime. La maionese si affumica con legno di melo. Il daikon è solo per spezzare.",
+      image: null,
+      allergens: [2, 3, 4]
+    },
+    {
+      name: "Agnello in tre cotture",
+      desc: "carré, sottospalla brasata, ragù di interiora — salsa al ginepro e mirto",
+      story: "Tre tagli, tre tempi, una sola salsa. Il ginepro lo schiaccio fresco col mortaio, il mirto arriva dall'orto dei miei zii.",
+      image: null,
+      allergens: [9, 12]
+    },
+    {
+      name: "Pre-dessert",
+      desc: "sorbetto al mandarino tardivo di Ciaculli, granella di olive nere",
+      story: "Frutto di gennaio, raccolto a marzo, conservato un anno. L'oliva nera in polvere fa da contrasto salato.",
+      image: null,
+      allergens: []
+    },
+    {
+      name: "Cioccolato 80%",
+      desc: "ganache di cacao Single Origin, sale Maldon, olio EVO Tonda Iblea, pane croccante",
+      story: "Cacao di Madagascar, lavorato come una crema. Sopra: sale Maldon, olio EVO Tonda Iblea, e pane bruciato. Si mangia con due cucchiai diversi, per scoprire i due lati.",
+      image: null,
+      allergens: [1, 7]
+    }
+  ]
+};
+
+const PRESET_MENUS = {
+  radici: MENU_RADICI,
+  sakura: MENU_SAKURA,
+  terraemare: MENU_TERRAEMARE
+};
+
+const EMPTY_MENU = {
+  name: "Nuovo Menu",
+  category: "tematico",
+  date: "",
+  price: 0,
+  chef: "Marco Lentini",
+  seats: 8,
+  chefNote: "",
+  dishes: [
+    { name: "", desc: "", story: "", image: null, allergens: [] }
+  ]
+};
+
+// Migration helper — old menu data may lack 'story'/'image'
+function normalizeMenu(m){
+  if (!m) return EMPTY_MENU;
+  return {
+    ...EMPTY_MENU,
+    ...m,
+    dishes: (m.dishes || []).map(d => ({
+      name: d.name || "",
+      desc: d.desc || "",
+      story: d.story || "",
+      image: d.image || null,
+      allergens: d.allergens || []
+    }))
+  };
+}
+
+Object.assign(window, { ALLERGENI, PRESET_MENUS, EMPTY_MENU, normalizeMenu });
