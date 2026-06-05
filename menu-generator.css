@@ -8,11 +8,15 @@
   color-scheme: light;
   --cream:#F5EDD8;
   --cream-deep:#EFE5C9;
+  --white:#FFFFFF;
   --ink:#1A1A18;
   --gold:#C4A86A;
   --gold-soft:#D9C28B;
   --warm-grey:#8C8880;
   --warm-grey-light:#B8B4AB;
+  /* Editor "desk" behind the A4 sheet — cream white, not dark */
+  --desk:#EFE8D6;
+  --desk-deep:#E6DDC6;
   --line-soft: color-mix(in srgb, var(--ink) 12%, transparent);
   --line-softer: color-mix(in srgb, var(--ink) 6%, transparent);
 
@@ -24,12 +28,13 @@
 }
 
 *{ box-sizing: border-box; margin: 0; padding: 0;}
-html, body{ height: 100%; overflow: hidden; }
+/* Opt out of browser auto/forced dark-mode: keep cream rendering as cream */
+html, body{ height: 100%; overflow: hidden; color-scheme: light; }
 body{
   font-family: var(--f-body);
   font-weight: 300;
   color: var(--ink);
-  background: #2a2820;
+  background: var(--desk);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -445,10 +450,10 @@ body{
    PREVIEW PANE (RIGHT)
    ============================================================ */
 .preview-pane{
-  background: #2a2820;
+  background: var(--desk);
   background-image:
-    radial-gradient(ellipse at top, color-mix(in srgb, var(--gold) 8%, transparent), transparent 60%),
-    linear-gradient(180deg, #2a2820 0%, #1d1c17 100%);
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--white) 55%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--desk) 0%, var(--desk-deep) 100%);
   overflow: auto;
   padding: 36px 0;
   display: flex;
@@ -461,11 +466,11 @@ body{
   position: sticky;
   top: 0;
   z-index: 5;
-  background: rgba(26, 26, 24, 0.6);
+  background: color-mix(in srgb, var(--white) 78%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   padding: 10px 18px;
-  border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent);
+  border: 1px solid var(--line-soft);
   border-radius: 0;
   display: flex;
   align-items: center;
@@ -474,7 +479,7 @@ body{
   font-size: 9.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--warm-grey-light);
+  color: var(--warm-grey);
 }
 .preview-toolbar .ptb-dot{
   width: 6px; height: 6px;
@@ -483,7 +488,7 @@ body{
 }
 .preview-toolbar .ptb-spacer{
   width: 1px; height: 16px;
-  background: color-mix(in srgb, var(--warm-grey-light) 35%, transparent);
+  background: var(--line-soft);
 }
 .preview-toolbar .ptb-zoom{
   display: flex;
@@ -493,8 +498,8 @@ body{
 .preview-toolbar .ptb-zoom button{
   width: 22px; height: 22px;
   background: transparent;
-  border: 1px solid color-mix(in srgb, var(--warm-grey-light) 35%, transparent);
-  color: var(--warm-grey-light);
+  border: 1px solid var(--line-soft);
+  color: var(--warm-grey);
   cursor: pointer;
   font-family: var(--f-serif);
   font-size: 14px;
@@ -508,7 +513,7 @@ body{
 .preview-toolbar .ptb-zoom .z-val{
   min-width: 42px;
   text-align: center;
-  color: var(--cream);
+  color: var(--ink);
 }
 
 .sheet-stack{
@@ -526,7 +531,8 @@ body{
   width: 210mm;
   height: 297mm;
   background: var(--cream);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 18px 44px rgba(60,50,28,0.18), 0 3px 10px rgba(60,50,28,0.12);
+  border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
   color: var(--ink);
   position: relative;
   overflow: hidden;
@@ -1742,4 +1748,304 @@ body{
     height: 297mm;
   }
   .page-A4:last-child{ page-break-after: avoid;}
+}
+
+/* ============================================================
+   CONSULENZA — componenti condivisi (multi-cliente)
+   ============================================================ */
+
+/* Marchio cliente: logo immagine o wordmark testuale */
+.brand-logo{
+  display: inline-block;
+  width: auto;
+  height: 2em;
+  vertical-align: middle;
+  object-fit: contain;
+}
+.brand-word{ font-family: inherit; }
+
+/* Prezzo per singola voce — "NOME | 8.00 €" */
+.dish-price{
+  font-family: var(--f-mono);
+  font-size: 0.78em;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin-left: 0.45em;
+  font-style: normal;
+}
+.dish-price-sep{
+  color: var(--warm-grey);
+  font-style: normal;
+  margin-right: 0.4em;
+  opacity: 0.7;
+}
+
+/* Decoro coast — onda */
+.coast-wave{ display: block; width: 100%; line-height: 0; color: var(--gold); }
+.coast-wave svg{ display: block; width: 100%; height: 100%; fill: currentColor; }
+
+/* Decoro coast — agrume */
+.citrus{ display: block; }
+.citrus .citrus-rind{ fill: var(--bt-orange, #F2972E); }
+.citrus .citrus-pith{ fill: #FFFFFF; }
+.citrus .citrus-flesh{ fill: color-mix(in srgb, var(--bt-orange, #F2972E) 26%, #FFFFFF); }
+.citrus .citrus-seg{ stroke: #FFFFFF; stroke-width: 2.4; }
+.citrus .citrus-core{ fill: color-mix(in srgb, var(--bt-orange, #F2972E) 16%, #FFFFFF); }
+
+/* ============================================================
+   FORM — testata cliente + selettore cliente + campo prezzo
+   ============================================================ */
+.form-brandline{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.form-logo{
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.field-price input{ max-width: 140px; }
+
+.client-list{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.client-row{
+  background: transparent;
+  border: 1px solid var(--line-soft);
+  padding: 9px 11px;
+  cursor: pointer;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  transition: all .15s ease;
+}
+.client-row:hover{ border-color: var(--ink); }
+.client-row.active{
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--cream);
+}
+.client-mark{
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--cream) 60%, white);
+}
+.client-row.active .client-mark{ background: color-mix(in srgb, var(--cream) 18%, transparent); }
+.client-mark img{ width: 100%; height: 100%; object-fit: contain; }
+.client-initial{
+  font-family: var(--f-display);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink);
+}
+.client-row.active .client-initial{ color: var(--cream); }
+.client-meta{ display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.client-name{
+  font-family: var(--f-serif);
+  font-size: 15px;
+  line-height: 1.1;
+}
+.client-kind{
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--warm-grey);
+}
+.client-row.active .client-kind{ color: color-mix(in srgb, var(--cream) 70%, transparent); }
+
+/* ============================================================
+   TEMA CLIENTE · il baretto  (Cocktail & Wine Bar — Messina)
+   Palette mare/agrumi + font display, estratti dal menù ufficiale.
+   ============================================================ */
+.sheet[data-client="baretto"]{
+  /* token brand */
+  --bt-cobalt:#1268A9;
+  --bt-navy:#21477F;
+  --bt-ink:#0E2E54;
+  --bt-sky:#EAF3FB;
+  --bt-sky-deep:#D6E7F4;
+  --bt-cream:#FFFEF3;
+  --bt-orange:#F2972E;
+  --bt-lime:#C9DC54;
+  --bt-pink:#CD7BB3;
+
+  /* mappatura ruoli (superfici chiare/interne) */
+  --cream: var(--bt-sky);
+  --cream-deep: var(--bt-sky-deep);
+  --white:#FFFFFF;
+  --ink: var(--bt-navy);
+  --gold: var(--bt-orange);
+  --gold-soft: color-mix(in srgb, var(--bt-orange) 55%, #FFFFFF);
+  --warm-grey:#5E7CA6;
+  --warm-grey-light:#9DB4D0;
+  --line-soft: color-mix(in srgb, var(--bt-navy) 18%, transparent);
+  --line-softer: color-mix(in srgb, var(--bt-navy) 9%, transparent);
+
+  /* font */
+  --f-display:'GFS Didot','Didot', Georgia, serif;
+  --f-serif:'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --f-body:'Jost', system-ui, sans-serif;
+  --f-mono:'Montserrat', system-ui, sans-serif;
+}
+
+/* Nome menù / titoli grandi → Bebas condensato, maiuscolo
+   (eco diretta di "MENÙ / COCKTAILS / FOOD" del poster). Il colore
+   resta var(--ink): navy sulle pagine chiare, crema sull'overlay foto. */
+.sheet[data-client="baretto"] .cover-name-m,
+.sheet[data-client="baretto"] .cover-menu-name-c,
+.sheet[data-client="baretto"] .tab-name,
+.sheet[data-client="baretto"] .ed-name,
+.sheet[data-client="baretto"] .dr-name{
+  font-family: var(--f-serif);          /* Bebas Neue */
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.012em;
+  font-weight: 400;
+  line-height: 0.86;
+  /* nomi lunghi (es. "BARETTOLOGY") vanno a capo, non vengono tagliati dalla pagina */
+  overflow-wrap: break-word;
+}
+/* Bebas è stretto e basso: alzo i corpi per ritrovare la presenza del poster,
+   restando entro la larghezza A4 anche con i nomi più lunghi dei preset. */
+.sheet[data-client="baretto"] .cover-name-m{ font-size: 92pt; letter-spacing: 0.006em; }
+.sheet[data-client="baretto"] .cover-menu-name-c{ font-size: 44pt; }
+.sheet[data-client="baretto"] .tab-name{ font-size: 66pt; }
+.sheet[data-client="baretto"] .ed-name{ font-size: 80pt; }
+.sheet[data-client="baretto"] .dr-name{ font-size: 52pt; }
+
+/* Voci / nomi → Bebas: serve un filo di spaziatura e interlinea compatta */
+.sheet[data-client="baretto"] .dish-name-c,
+.sheet[data-client="baretto"] .dish-name-m,
+.sheet[data-client="baretto"] .tab-dish-name,
+.sheet[data-client="baretto"] .ed-dish-name,
+.sheet[data-client="baretto"] .dr-entry-name,
+.sheet[data-client="baretto"] .inner-menu-name-c{
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  line-height: 1.06;
+}
+
+/* Testi lunghi/narrativi → Jost (Bebas non è leggibile in blocco) */
+.sheet[data-client="baretto"] .ed-dish-story,
+.sheet[data-client="baretto"] .dr-entry-story,
+.sheet[data-client="baretto"] .dr-note,
+.sheet[data-client="baretto"] .ed-cover-note,
+.sheet[data-client="baretto"] .cover-note-c{
+  font-family: var(--f-body);
+}
+
+/* Niente finto corsivo dove i font non lo hanno */
+.sheet[data-client="baretto"] .dish-num-c,
+.sheet[data-client="baretto"] .dish-num-m,
+.sheet[data-client="baretto"] .ed-dish-num,
+.sheet[data-client="baretto"] .dr-entry-num,
+.sheet[data-client="baretto"] .folio-m,
+.sheet[data-client="baretto"] .cover-folio-m,
+.sheet[data-client="baretto"] .ed-page-folio,
+.sheet[data-client="baretto"] .dr-page-folio,
+.sheet[data-client="baretto"] .stat-val-m,
+.sheet[data-client="baretto"] .dr-stat-val,
+.sheet[data-client="baretto"] .cover-chef-m,
+.sheet[data-client="baretto"] .dr-chef,
+.sheet[data-client="baretto"] .cover-portate-c,
+.sheet[data-client="baretto"] .placeholder-c,
+.sheet[data-client="baretto"] .placeholder-m,
+.sheet[data-client="baretto"] .dr-top,
+.sheet[data-client="baretto"] .ed-cover-foot span:first-child{
+  font-style: normal;
+}
+
+/* Logo — dimensioni per contesto */
+.sheet[data-client="baretto"] .cover-wm-c,
+.sheet[data-client="baretto"] .dr-cover-wm{ line-height: 0; margin-bottom: 7mm; }
+.sheet[data-client="baretto"] .cover-wm-c .brand-logo{ height: 46mm; }
+.sheet[data-client="baretto"] .dr-cover-wm .brand-logo{ height: 40mm; }
+.sheet[data-client="baretto"] .cover-brand-m{
+  display: block;
+  height: 34mm;
+  width: auto;
+  margin-bottom: 7mm;
+}
+.sheet[data-client="baretto"] .inner-wm-c .brand-logo,
+.sheet[data-client="baretto"] .inner-wm-m .brand-logo,
+.sheet[data-client="baretto"] .tab-wm .brand-logo,
+.sheet[data-client="baretto"] .ed-stamp .brand-logo,
+.sheet[data-client="baretto"] .ed-page-wm .brand-logo,
+.sheet[data-client="baretto"] .dr-page-wm .brand-logo{ height: 13mm; }
+
+/* Onde — divisori */
+.sheet[data-client="baretto"] .cover-wave-c,
+.sheet[data-client="baretto"] .cover-wave-m{
+  height: 7mm;
+  color: var(--bt-cobalt);
+  margin: 5mm 0 1mm;
+}
+.sheet[data-client="baretto"] .tab-wave{
+  height: 5mm;
+  width: 30mm;
+  margin: 6mm auto 2mm;
+  color: var(--bt-orange);
+}
+
+/* Agrume — accento d'angolo (dietro al contenuto, ritagliato dalla pagina) */
+.sheet[data-client="baretto"] .cover-page-c > *,
+.sheet[data-client="baretto"] .cover-page-m > *{ position: relative; z-index: 1; }
+.sheet[data-client="baretto"] .cover-citrus{
+  position: absolute;
+  right: -22mm;
+  bottom: -22mm;
+  width: 78mm;
+  height: 78mm;
+  transform: rotate(-6deg);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.92;
+}
+
+/* Editoriale — overlay cover su foto, tinta cobalto */
+.sheet[data-client="baretto"] .ed-cover-overlay{
+  --ink: var(--bt-cream);
+  --warm-grey: color-mix(in srgb, var(--bt-cream) 72%, transparent);
+  --gold: var(--bt-orange);
+  color: var(--bt-cream);
+}
+.sheet[data-client="baretto"] .ed-cover-overlay::before{
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--bt-ink) 82%, transparent) 0%,
+    color-mix(in srgb, var(--bt-cobalt) 45%, transparent) 42%,
+    color-mix(in srgb, var(--bt-ink) 72%, transparent) 100%);
+}
+.sheet[data-client="baretto"] .ed-cover .ed-hero.dish-image-placeholder{
+  background:
+    repeating-linear-gradient(135deg, transparent 0 18px, color-mix(in srgb, var(--bt-navy) 28%, transparent) 18px 19px),
+    var(--bt-sky-deep);
+}
+
+/* Prezzo voce in arancio brand */
+.sheet[data-client="baretto"] .dish-price{ color: var(--bt-orange); }
+
+/* Editor: backdrop anteprima — cielo chiaro del brand (niente navy scuro) */
+.app[data-client="baretto"] .preview-pane{
+  background: #EAF3FB;
+  background-image:
+    radial-gradient(ellipse at top, rgba(255,255,255,0.62), transparent 60%),
+    linear-gradient(180deg, #EAF3FB 0%, #DBEAF6 100%);
+}
+.app[data-client="baretto"] .page-A4{
+  box-shadow: 0 18px 44px rgba(18,104,169,0.20), 0 3px 10px rgba(14,46,84,0.12);
+  border-color: color-mix(in srgb, #1268A9 14%, transparent);
 }

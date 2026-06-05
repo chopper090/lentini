@@ -182,10 +182,72 @@ const MENU_TERRAEMARE = {
   ]
 };
 
+// ============================================================
+// CLIENTE · il baretto — menù estratti dal menù ufficiale
+// Modello "stessa logica": liste di voci con prezzo per voce.
+// ============================================================
+
+const BARETTO_SIGNATURE = {
+  name: "Barettology",
+  category: "signature",
+  date: "2026-06-05",
+  price: 9,
+  chef: "il baretto",
+  seats: 8,
+  chefNote: "I nostri signature. Mare, agrumi e una buona dose di Sicilia.",
+  dishes: [
+    { name: "W Maria", desc: "vodka, pomodoro speziato, sedano, tabasco, worcester, sale al limone", story: "", image: null, price: 9, allergens: [9, 12] },
+    { name: "Ancho Paloma", desc: "tequila, ancho reyes, succo di lime, pompelmo rosa, soda all'agave", story: "", image: null, price: 9, allergens: [] },
+    { name: "Coral", desc: "gin, bitter al pompelmo, lime, soda, scorza d'arancia bruciata", story: "", image: null, price: 9, allergens: [12] },
+    { name: "Daiquiri Hemingway", desc: "rum bianco, maraschino, succo di lime, pompelmo", story: "", image: null, price: 9, allergens: [] },
+    { name: "Quota Rosa", desc: "gin, ibisco, lime, prosecco, fiori eduli", story: "", image: null, price: 9, allergens: [12] },
+    { name: "Calle", desc: "mezcal, lime, sciroppo d'agave, sale al peperoncino", story: "", image: null, price: 10, allergens: [] }
+  ]
+};
+
+const BARETTO_CLASSICI = {
+  name: "I Classici",
+  category: "cocktail",
+  date: "2026-06-05",
+  price: 8,
+  chef: "il baretto",
+  seats: 8,
+  chefNote: "I grandi classici. A partire da 8.00 €.",
+  dishes: [
+    { name: "Aviation", desc: "gin, maraschino, crème de violette, succo di lime", story: "", image: null, price: 8, allergens: [] },
+    { name: "Negroni", desc: "gin, bitter Campari, vermouth rosso", story: "", image: null, price: 8, allergens: [12] },
+    { name: "Americano", desc: "bitter Campari, vermouth rosso, soda", story: "", image: null, price: 8, allergens: [12] },
+    { name: "Margarita", desc: "tequila, triple sec, succo di lime, sale", story: "", image: null, price: 8, allergens: [] },
+    { name: "Daiquiri", desc: "rum bianco, succo di lime, zucchero di canna", story: "", image: null, price: 8, allergens: [] },
+    { name: "Old Fashioned", desc: "bourbon, angostura, zucchero, scorza d'arancia", story: "", image: null, price: 9, allergens: [] }
+  ]
+};
+
+const BARETTO_CUCINA = {
+  name: "Cucina",
+  category: "food",
+  date: "2026-06-05",
+  price: 8,
+  chef: "il baretto",
+  seats: 8,
+  chefNote: "I nostri buns, i classici al piatto e le salse della casa.",
+  dishes: [
+    { name: "Classicone", desc: "bun, manzo, cheddar, bacon croccante, salsa baretto", story: "", image: null, price: 8, allergens: [1, 3, 7, 10] },
+    { name: "Little Tonny", desc: "bun, pollo croccante, lattuga, maionese affumicata", story: "", image: null, price: 8, allergens: [1, 3, 7, 10] },
+    { name: "Vegburger", desc: "bun, burger vegetale, cipolla caramellata, salsa rosa", story: "", image: null, price: 8, allergens: [1, 6, 7] },
+    { name: "Salse, crostini & nachos", desc: "hummus, guacamole, salmorejo, alpino", story: "", image: null, price: 5, allergens: [1, 11] },
+    { name: "Black Angus al piatto", desc: "black angus affumicato 100gr, rucola, parmigiano, glassa di aceto balsamico", story: "", image: null, price: 10, allergens: [7, 12] },
+    { name: "Caprese", desc: "pomodoro cuore di bue, mozzarella di bufala, basilico, origano", story: "", image: null, price: 8, allergens: [7] }
+  ]
+};
+
 const PRESET_MENUS = {
   radici: MENU_RADICI,
   sakura: MENU_SAKURA,
-  terraemare: MENU_TERRAEMARE
+  terraemare: MENU_TERRAEMARE,
+  barettoSignature: BARETTO_SIGNATURE,
+  barettoClassici: BARETTO_CLASSICI,
+  barettoCucina: BARETTO_CUCINA
 };
 
 const EMPTY_MENU = {
@@ -197,7 +259,7 @@ const EMPTY_MENU = {
   seats: 8,
   chefNote: "",
   dishes: [
-    { name: "", desc: "", story: "", image: null, allergens: [] }
+    { name: "", desc: "", story: "", image: null, price: null, allergens: [] }
   ]
 };
 
@@ -212,6 +274,7 @@ function normalizeMenu(m){
       desc: d.desc || "",
       story: d.story || "",
       image: d.image || null,
+      price: (d.price === 0 || d.price) ? d.price : null,
       allergens: d.allergens || []
     }))
   };
