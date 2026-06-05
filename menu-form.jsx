@@ -280,7 +280,7 @@ function Form({ menu, setMenu, variant, setVariant, client, setClient, onLoadPre
         {C && C.id !== "dalentini"
           ? <a href="index.html#consulenza">← Consulenza</a>
           : <a href="Brand Guidelines.html">← Brand Guidelines</a>}
-        <span>v 1.3</span>
+        <span>v 1.2</span>
       </div>
     </aside>
   );
@@ -304,9 +304,9 @@ function DishEditor({ i, dish, total, isNarrative, isImage, onChange, onToggleAl
       <div className="dish-row-head">
         <div className="dish-row-num">{String(i+1).padStart(2, "0")}</div>
         <div className="dish-row-controls">
-          <button className="ctrl-btn" disabled={i === 0} onClick={() => onMove(-1)}>↑</button>
-          <button className="ctrl-btn" disabled={i === total - 1} onClick={() => onMove(1)}>↓</button>
-          <button className="ctrl-btn ctrl-x" disabled={total <= 1} onClick={onRemove}>×</button>
+          <button className="ctrl-btn" disabled={i === 0} onClick={() => onMove(-1)} title="Sposta su" aria-label="Sposta la portata su">↑</button>
+          <button className="ctrl-btn" disabled={i === total - 1} onClick={() => onMove(1)} title="Sposta giù" aria-label="Sposta la portata giù">↓</button>
+          <button className="ctrl-btn ctrl-x" disabled={total <= 1} onClick={onRemove} title="Rimuovi portata" aria-label="Rimuovi la portata">×</button>
         </div>
       </div>
 

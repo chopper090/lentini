@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <title>Generatore Menù · Consulenza</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="light dark">
+<!-- Disabilita le estensioni tipo "Dark Reader" che invertono i colori a forza -->
+<meta name="darkreader-lock">
+<!-- Applica il tema salvato prima del primo paint (niente flash) -->
+<script>(function(){try{var t=localStorage.getItem('ui.theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -90,6 +94,16 @@ function App(){
   const [zoom, setZoom] = useState(0.55);
   const previewRef = useRef(null);
 
+  // ---- tema chiaro/scuro (default: chiaro) + vista mobile (editor/anteprima) ----
+  const [theme, setTheme] = useState(() => {
+    try { return localStorage.getItem("ui.theme") || "light"; } catch(e){ return "light"; }
+  });
+  const [mview, setMview] = useState("editor");
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    try { localStorage.setItem("ui.theme", theme); } catch(e){}
+  }, [theme]);
+
   // ---- client: font + url + persistenza attivo ----
   useEffect(() => {
     applyClientFonts(client);
@@ -118,25 +132,22 @@ function App(){
   }, [clientId]);
 
   // ---- preview auto-fit ----
-  useEffect(() => {
-    const calcFit = () => {
-      const pane = previewRef.current;
-      if (!pane) return;
-      // available width = pane width minus 48px padding
-      const avail = pane.clientWidth - 96;
-      // A4 width = 210mm = ~793px at 96dpi
-      const a4w = 210 * 3.7795275591;
-      const target = Math.min(1, avail / a4w);
-      // round to one decimal
-      setZoom(prev => {
-        const next = Math.max(0.3, Math.min(1, Math.round(target * 100) / 100));
-        return next;
-      });
-    };
-    calcFit();
-    window.addEventListener("resize", calcFit);
-    return () => window.removeEventListener("resize", calcFit);
+  const fitZoom = useCallback(() => {
+    const pane = previewRef.current;
+    if (!pane) return;
+    const avail = pane.clientWidth - 96;          // larghezza pannello meno padding
+    if (avail <= 0) return;                        // pannello nascosto (mobile): non ricalcolare
+    const a4w = 210 * 3.7795275591;                // A4 = 210mm ≈ 793px @96dpi
+    const target = Math.min(1, avail / a4w);
+    setZoom(Math.max(0.3, Math.min(1, Math.round(target * 100) / 100)));
   }, []);
+  useEffect(() => {
+    fitZoom();
+    window.addEventListener("resize", fitZoom);
+    return () => window.removeEventListener("resize", fitZoom);
+  }, [fitZoom]);
+  // ricalcola quando l'anteprima torna visibile (mobile) o cambia variante
+  useEffect(() => { fitZoom(); }, [mview, variant, fitZoom]);
 
   // ---- actions ----
   const loadPreset = (key) => {
@@ -164,7 +175,7 @@ function App(){
   const zoomOut = () => setZoom(z => Math.max(0.3, Math.round((z - 0.05) * 100) / 100));
 
   return (
-    <div className="app" data-client={clientId}>
+    <div className="app" data-client={clientId} data-mview={mview}>
       <Form
         menu={menu}
         setMenu={setMenu}
@@ -180,20 +191,35 @@ function App(){
       <div className="preview-pane" ref={previewRef} data-client={clientId}>
         <div className="preview-toolbar">
           <div className="ptb-dot"></div>
-          <span>Anteprima A4 · 210 × 297 mm</span>
+          <span className="ptb-hide-sm">Anteprima A4 · 210 × 297 mm</span>
+          <div className="ptb-spacer ptb-hide-sm"></div>
+          <span>{client.name} · {VLABELS[variant]}</span>
           <div className="ptb-spacer"></div>
-          <span>{client.name} · Variante {VLABELS[variant]}</span>
+          <button
+            className="ptb-theme"
+            onClick={() => setTheme(t => (t === "light" ? "dark" : "light"))}
+            title={theme === "light" ? "Passa al tema scuro" : "Passa al tema chiaro"}
+            aria-label={theme === "light" ? "Passa al tema scuro" : "Passa al tema chiaro"}>
+            {theme === "light" ? "☾" : "☀"}
+          </button>
           <div className="ptb-spacer"></div>
           <div className="ptb-zoom">
-            <button onClick={zoomOut} title="Zoom out">−</button>
+            <button onClick={zoomOut} title="Riduci zoom" aria-label="Riduci zoom">−</button>
             <span className="z-val">{Math.round(zoom * 100)}%</span>
-            <button onClick={zoomIn} title="Zoom in">+</button>
+            <button onClick={zoomIn} title="Aumenta zoom" aria-label="Aumenta zoom">+</button>
           </div>
         </div>
         <div className="sheet-stack" style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}>
           <SheetComponent menu={menu} client={client} />
         </div>
       </div>
+
+      <nav className="mobile-tabs" aria-label="Sezioni">
+        <button className={"mobile-tab " + (mview === "editor" ? "active" : "")}
+          onClick={() => setMview("editor")} aria-pressed={mview === "editor"}>✎ Editor</button>
+        <button className={"mobile-tab " + (mview === "preview" ? "active" : "")}
+          onClick={() => setMview("preview")} aria-pressed={mview === "preview"}>▭ Anteprima</button>
+      </nav>
     </div>
   );
 }
@@ -220,8 +246,9 @@ function buildStandaloneHTML(menu, variant, clientId){
   const cl = getClient(clientId);
   const clientFonts = cl.fonts ? `\n<link href="${cl.fonts}" rel="stylesheet">` : "";
   return `<!DOCTYPE html>
-<html lang="it"><head><meta charset="UTF-8">
+<html lang="it" data-theme="light"><head><meta charset="UTF-8">
 <title>${menu.name} · ${cl.name}</title>
+<meta name="color-scheme" content="light"><meta name="darkreader-lock">
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">${clientFonts}
 <link rel="stylesheet" href="menu-generator.css">
 <style>body{background:white;overflow:visible;height:auto}#root{display:block;height:auto}.sheet{transform:none}.page-A4{margin:0 auto 24px;box-shadow:0 8px 24px rgba(0,0,0,.12)}@media print{.page-A4{box-shadow:none;page-break-after:always;page-break-inside:avoid}.page-A4:last-child{page-break-after:avoid}}</style>
