@@ -1,6 +1,7 @@
 // ============================================================
-// DaLentini · Menu sheet components — 5 varianti grafiche
+// Menu sheet components — 5 varianti grafiche
 // Tutte renderizzano in formato A4 reale (210mm × 297mm)
+// Client-aware: brand, logo, palette e font dipendono dal cliente.
 // ============================================================
 
 const { useState, useEffect, useRef, useMemo } = React;
@@ -21,6 +22,50 @@ const formatPrice = (p) => {
 };
 
 const courseNumber = (i) => String(i + 1).padStart(2, "0");
+
+// Cliente attivo, con fallback alla casa
+const useClient = (client) =>
+  client || (typeof getClient === "function" ? getClient(DEFAULT_CLIENT) : { id: "dalentini", name: "DaLentini", role: "chef-patron", stamp: "Home Restaurant · Messina", stampInline: "DaLentini · Home Restaurant", diaryTitle: "Diario di sera", logo: { type: "wordmark", text: "DaLentini" } });
+
+// Marchio del cliente: logo immagine oppure wordmark testuale
+const Brand = ({ client, className = "" }) => {
+  const C = useClient(client);
+  if (C.logo && C.logo.type === "image"){
+    return <img className={"brand-logo " + className} src={C.logo.src} alt={C.logo.alt || C.name} />;
+  }
+  return <span className={"brand-word " + className}>{(C.logo && C.logo.text) || C.name}</span>;
+};
+
+// Prezzo per singola voce (usato dai menù bar tipo "NOME | 8.00 €")
+const DishPrice = ({ value }) => {
+  if (value === null || value === undefined || value === "") return null;
+  return (
+    <span className="dish-price"><i className="dish-price-sep">|</i>{Number(value).toFixed(2)} €</span>
+  );
+};
+
+// Decoro "coast": onda piena con bordo ondulato in alto
+const CoastWave = ({ className = "" }) => (
+  <div className={"coast-wave " + className} aria-hidden="true">
+    <svg viewBox="0 0 240 12" preserveAspectRatio="none">
+      <path d="M0,6 C10,0 20,0 30,6 C40,12 50,12 60,6 C70,0 80,0 90,6 C100,12 110,12 120,6 C130,0 140,0 150,6 C160,12 170,12 180,6 C190,0 200,0 210,6 C220,12 230,12 240,6 L240,12 L0,12 Z"/>
+    </svg>
+  </div>
+);
+
+// Decoro "coast": fetta d'agrume
+const Citrus = ({ className = "" }) => (
+  <svg className={"citrus " + className} viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="47" className="citrus-rind"/>
+    <circle cx="50" cy="50" r="39" className="citrus-pith"/>
+    <circle cx="50" cy="50" r="35" className="citrus-flesh"/>
+    {Array.from({ length: 10 }).map((_, i) => {
+      const a = (i / 10) * Math.PI * 2;
+      return <line key={i} x1="50" y1="50" x2={(50 + 35 * Math.cos(a)).toFixed(1)} y2={(50 + 35 * Math.sin(a)).toFixed(1)} className="citrus-seg"/>;
+    })}
+    <circle cx="50" cy="50" r="4" className="citrus-core"/>
+  </svg>
+);
 
 const AllergensInline = ({ list }) => {
   if (!list || list.length === 0) return null;
@@ -61,16 +106,19 @@ const DishImage = ({ src, ratio = "4 / 5", caption = "Foto piatto", className = 
 // ============================================================
 // I — MENU CLASSICO  (centered, symmetric, gold ornament)
 // ============================================================
-function MenuClassico({ menu }) {
+function MenuClassico({ menu, client }) {
+  const C = useClient(client);
+  const coast = C.decor === "coast";
   const portate = menu.dishes.length;
   return (
-    <div className="sheet sheet-classico" data-screen-label="Menu Classico">
+    <div className="sheet sheet-classico" data-client={C.id} data-screen-label="Menu Classico">
       <div className="page-A4 cover-page-c">
-        <div className="cover-chef-c">chef-patron · {menu.chef}</div>
+        {coast && <Citrus className="cover-citrus" />}
+        <div className="cover-chef-c">{C.role} · {menu.chef}</div>
 
         <div className="cover-center-c">
-          <div className="cover-stamp-c">Home Restaurant · Messina</div>
-          <div className="cover-wm-c">DaLentini</div>
+          <div className="cover-stamp-c">{C.stamp}</div>
+          <div className="cover-wm-c"><Brand client={C} /></div>
           <div className="cover-ornament-c">
             <span className="orn-rule"></span>
             <span className="orn-dot">·</span>
@@ -88,15 +136,16 @@ function MenuClassico({ menu }) {
           )}
         </div>
 
+        {coast && <CoastWave className="cover-wave-c" />}
         <div className="cover-footer-c">
           <span>{formatDate(menu.date)}</span>
-          <span className="cover-seats-c">{menu.seats} posti · su prenotazione</span>
+          <span className="cover-seats-c">{bookingLine(C, menu)}</span>
         </div>
       </div>
 
       <div className="page-A4 inner-page-c">
         <div className="inner-head-c">
-          <div className="inner-wm-c">DaLentini</div>
+          <div className="inner-wm-c"><Brand client={C} className="brand-sm" /></div>
           <div className="inner-menu-name-c">— {menu.name} —</div>
         </div>
 
@@ -106,6 +155,7 @@ function MenuClassico({ menu }) {
               <div className="dish-num-c">{courseNumber(i)}</div>
               <h3 className="dish-name-c">
                 {d.name || <span className="placeholder-c">Nome del piatto</span>}
+                <DishPrice value={d.price} />
                 <AllergensInline list={d.allergens} />
               </h3>
               {d.desc && <p className="dish-desc-c">{d.desc}</p>}
@@ -138,17 +188,22 @@ function MenuClassico({ menu }) {
 // ============================================================
 // II — MENU CONTEMPORANEO  (left-aligned, editorial)
 // ============================================================
-function MenuContemporaneo({ menu }) {
+function MenuContemporaneo({ menu, client }) {
+  const C = useClient(client);
+  const coast = C.decor === "coast";
+  const hasLogo = C.logo && C.logo.type === "image";
   const portate = menu.dishes.length;
   return (
-    <div className="sheet sheet-contemporaneo" data-screen-label="Menu Contemporaneo">
+    <div className="sheet sheet-contemporaneo" data-client={C.id} data-screen-label="Menu Contemporaneo">
       <div className="page-A4 cover-page-m">
+        {coast && <Citrus className="cover-citrus" />}
         <div className="cover-top-m">
-          <span className="cover-stamp-m">DaLentini · Home Restaurant</span>
+          <span className="cover-stamp-m">{C.stampInline}</span>
           <span className="cover-date-m">{formatDate(menu.date)}</span>
         </div>
 
         <div className="cover-body-m">
+          {hasLogo && <Brand client={C} className="cover-brand-m" />}
           <div className="cover-cat-m">— menu {menu.category} —</div>
           <h1 className="cover-name-m">{menu.name || "—"}</h1>
           <div className="cover-rule-m"></div>
@@ -171,15 +226,16 @@ function MenuContemporaneo({ menu }) {
           )}
         </div>
 
+        {coast && <CoastWave className="cover-wave-m" />}
         <div className="cover-foot-m">
-          <span className="cover-chef-m">— {menu.chef}, chef-patron</span>
+          <span className="cover-chef-m">— {menu.chef}, {C.role}</span>
           <span className="cover-folio-m">I</span>
         </div>
       </div>
 
       <div className="page-A4 inner-page-m">
         <div className="inner-top-m">
-          <span className="inner-wm-m">DaLentini</span>
+          <span className="inner-wm-m"><Brand client={C} className="brand-sm" /></span>
           <span className="inner-name-m">{menu.name} · {courseNumber(portate-1)} portate</span>
         </div>
 
@@ -192,6 +248,7 @@ function MenuContemporaneo({ menu }) {
               <div className="dish-body-m">
                 <h3 className="dish-name-m">
                   {d.name || <span className="placeholder-m">Nome del piatto</span>}
+                  <DishPrice value={d.price} />
                   <AllergensInline list={d.allergens} />
                 </h3>
                 {d.desc && <p className="dish-desc-m">{d.desc}</p>}
@@ -214,13 +271,15 @@ function MenuContemporaneo({ menu }) {
 // ============================================================
 // III — MENU TABULA  (ultra-minimal, single page)
 // ============================================================
-function MenuTabula({ menu }) {
+function MenuTabula({ menu, client }) {
+  const C = useClient(client);
+  const coast = C.decor === "coast";
   const portate = menu.dishes.length;
   return (
-    <div className="sheet sheet-tabula" data-screen-label="Menu Tabula">
+    <div className="sheet sheet-tabula" data-client={C.id} data-screen-label="Menu Tabula">
       <div className="page-A4 tabula-page">
         <div className="tab-head">
-          <div className="tab-wm">DaLentini</div>
+          <div className="tab-wm"><Brand client={C} className="brand-sm" /></div>
           <div className="tab-meta">
             <span>— menu {menu.category} —</span>
             <span>{formatDate(menu.date)}</span>
@@ -230,6 +289,7 @@ function MenuTabula({ menu }) {
         <div className="tab-title">
           <h1 className="tab-name">{menu.name || "—"}</h1>
           <div className="tab-rule"></div>
+          {coast && <CoastWave className="tab-wave" />}
           <div className="tab-stats">
             <span>{courseNumber(portate-1)} portate</span>
             <span className="dot-sep">·</span>
@@ -244,6 +304,7 @@ function MenuTabula({ menu }) {
             <div className="tab-dish" key={i}>
               <h3 className="tab-dish-name">
                 {d.name || <span className="placeholder-m">Nome del piatto</span>}
+                <DishPrice value={d.price} />
                 <AllergensInline list={d.allergens} />
               </h3>
               {d.desc && <div className="tab-dish-desc">{d.desc}</div>}
@@ -264,7 +325,8 @@ function MenuTabula({ menu }) {
 // IV — MENU EDITORIALE  (with photos + story per dish)
 // Cover + dishes in horizontal half-page slots, image left, story right
 // ============================================================
-function MenuEditoriale({ menu }) {
+function MenuEditoriale({ menu, client }) {
+  const C = useClient(client);
   const portate = menu.dishes.length;
   // Group dishes 2 per inner page
   const pages = [];
@@ -276,7 +338,7 @@ function MenuEditoriale({ menu }) {
   const heroSrc = menu.dishes.find(d => d.image)?.image || null;
 
   return (
-    <div className="sheet sheet-editoriale" data-screen-label="Menu Editoriale">
+    <div className="sheet sheet-editoriale" data-client={C.id} data-screen-label="Menu Editoriale">
       {/* COVER */}
       <div className="page-A4 ed-cover">
         <DishImage
@@ -287,7 +349,7 @@ function MenuEditoriale({ menu }) {
         />
         <div className="ed-cover-overlay">
           <div className="ed-cover-top">
-            <span className="ed-stamp">DaLentini</span>
+            <span className="ed-stamp"><Brand client={C} className="brand-sm" /></span>
             <span className="ed-date">{formatDate(menu.date)}</span>
           </div>
           <div className="ed-cover-body">
@@ -301,8 +363,8 @@ function MenuEditoriale({ menu }) {
             {menu.chefNote && <p className="ed-cover-note">«&nbsp;{menu.chefNote}&nbsp;»</p>}
           </div>
           <div className="ed-cover-foot">
-            <span>— {menu.chef}, chef-patron</span>
-            <span>{menu.seats} posti · su prenotazione</span>
+            <span>— {menu.chef}, {C.role}</span>
+            <span>{bookingLine(C, menu)}</span>
           </div>
         </div>
       </div>
@@ -311,7 +373,7 @@ function MenuEditoriale({ menu }) {
       {pages.map((group, pIdx) => (
         <div className="page-A4 ed-page" key={pIdx}>
           <div className="ed-page-head">
-            <span className="ed-page-wm">DaLentini</span>
+            <span className="ed-page-wm"><Brand client={C} className="brand-sm" /></span>
             <span className="ed-page-name">{menu.name} · {courseNumber(portate-1)} portate</span>
             <span className="ed-page-folio">{romanize(pIdx + 2)}</span>
           </div>
@@ -331,6 +393,7 @@ function MenuEditoriale({ menu }) {
                     <div className="ed-dish-num">{courseNumber(i)}</div>
                     <h3 className="ed-dish-name">
                       {d.name || <span className="placeholder-m">Nome del piatto</span>}
+                      <DishPrice value={d.price} />
                     </h3>
                     {d.desc && <p className="ed-dish-desc">{d.desc}</p>}
                     {d.story && (
@@ -366,7 +429,8 @@ function MenuEditoriale({ menu }) {
 // V — MENU DIARIO  (narrative without photos)
 // Cover + journal-style entries with story per dish
 // ============================================================
-function MenuDiario({ menu }) {
+function MenuDiario({ menu, client }) {
+  const C = useClient(client);
   const portate = menu.dishes.length;
   // Group dishes 3 per inner page (varies based on story length, but 3 fits)
   const perPage = 3;
@@ -376,16 +440,16 @@ function MenuDiario({ menu }) {
   }
 
   return (
-    <div className="sheet sheet-diario" data-screen-label="Menu Diario">
+    <div className="sheet sheet-diario" data-client={C.id} data-screen-label="Menu Diario">
       {/* COVER */}
       <div className="page-A4 dr-cover">
         <div className="dr-top">
-          <span className="dr-stamp">— Diario di sera —</span>
+          <span className="dr-stamp">— {C.diaryTitle} —</span>
           <span className="dr-date">{formatDate(menu.date)}</span>
         </div>
 
         <div className="dr-cover-body">
-          <div className="dr-cover-wm">DaLentini</div>
+          <div className="dr-cover-wm"><Brand client={C} /></div>
           <div className="dr-cat">menu {menu.category}</div>
           <h1 className="dr-name">«&nbsp;{menu.name || "—"}&nbsp;»</h1>
           {menu.chefNote && (
@@ -400,7 +464,7 @@ function MenuDiario({ menu }) {
         </div>
 
         <div className="dr-cover-foot">
-          <span className="dr-chef">scritto da {menu.chef}, chef-patron</span>
+          <span className="dr-chef">scritto da {menu.chef}, {C.role}</span>
         </div>
       </div>
 
@@ -408,7 +472,7 @@ function MenuDiario({ menu }) {
       {pages.map((group, pIdx) => (
         <div className="page-A4 dr-page" key={pIdx}>
           <div className="dr-page-head">
-            <span className="dr-page-wm">DaLentini</span>
+            <span className="dr-page-wm"><Brand client={C} className="brand-sm" /></span>
             <span className="dr-page-meta">{menu.name} · {courseNumber(portate-1)} portate</span>
             <span className="dr-page-folio">{romanize(pIdx + 2)}</span>
           </div>
@@ -422,6 +486,7 @@ function MenuDiario({ menu }) {
                   <div className="dr-entry-body">
                     <h3 className="dr-entry-name">
                       {d.name || <span className="placeholder-m">Nome del piatto</span>}
+                      <DishPrice value={d.price} />
                       <AllergensInline list={d.allergens} />
                     </h3>
                     {d.desc && <p className="dr-entry-desc">{d.desc}</p>}
@@ -456,5 +521,6 @@ function romanize(n){
 
 Object.assign(window, {
   MenuClassico, MenuContemporaneo, MenuTabula, MenuEditoriale, MenuDiario,
+  Brand, DishPrice, CoastWave, Citrus,
   formatDate, formatPrice, ALLERGENI
 });

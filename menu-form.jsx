@@ -14,7 +14,12 @@ const VARIANTS = [
 const NARRATIVE_VARIANTS = new Set(["editoriale", "diario"]);
 const IMAGE_VARIANTS = new Set(["editoriale"]);
 
-function Form({ menu, setMenu, variant, setVariant, onLoadPreset, onReset, onPrint, onExport }) {
+function Form({ menu, setMenu, variant, setVariant, client, setClient, onLoadPreset, onReset, onPrint, onExport }) {
+
+  const clientList = (typeof CLIENT_ORDER !== "undefined" ? CLIENT_ORDER : Object.keys(CLIENTS || {}))
+    .map(id => CLIENTS[id]).filter(Boolean);
+  const C = client || (typeof getClient === "function" ? getClient(DEFAULT_CLIENT) : null);
+  const presets = (C && C.presets) || [];
 
   const updateField = (field, value) => {
     setMenu(prev => ({ ...prev, [field]: value }));
@@ -43,7 +48,7 @@ function Form({ menu, setMenu, variant, setVariant, onLoadPreset, onReset, onPri
   const addDish = () => {
     setMenu(prev => ({
       ...prev,
-      dishes: [...prev.dishes, { name: "", desc: "", story: "", image: null, allergens: [] }]
+      dishes: [...prev.dishes, { name: "", desc: "", story: "", image: null, price: null, allergens: [] }]
     }));
   };
 
@@ -95,9 +100,36 @@ function Form({ menu, setMenu, variant, setVariant, onLoadPreset, onReset, onPri
   return (
     <aside className="form-panel">
       <div className="form-head">
-        <div className="form-brand">DaLentini</div>
+        <div className="form-brandline">
+          {C && C.logo && C.logo.type === "image"
+            ? <img className="form-logo" src={C.logo.src} alt={C.name} />
+            : null}
+          <div className="form-brand">{C ? C.name : "DaLentini"}</div>
+        </div>
         <div className="form-title">Generatore Menù</div>
-        <div className="form-sub">v 1.2 · template interno</div>
+        <div className="form-sub">Consulenza · {C ? C.kind : "template interno"}</div>
+      </div>
+
+      <div className="form-section">
+        <div className="section-label">Cliente · {clientList.length}</div>
+        <div className="client-list">
+          {clientList.map(cl => (
+            <button
+              key={cl.id}
+              className={"client-row " + (C && C.id === cl.id ? "active" : "")}
+              onClick={() => setClient && setClient(cl.id)}>
+              <span className="client-mark">
+                {cl.logo && cl.logo.type === "image"
+                  ? <img src={cl.logo.src} alt="" />
+                  : <span className="client-initial">{cl.name.slice(0,1)}</span>}
+              </span>
+              <span className="client-meta">
+                <span className="client-name">{cl.name}</span>
+                <span className="client-kind">{cl.kind} · {cl.place}</span>
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="form-section">
@@ -122,15 +154,11 @@ function Form({ menu, setMenu, variant, setVariant, onLoadPreset, onReset, onPri
       <div className="form-section">
         <div className="section-label">Carica esempio</div>
         <div className="preset-row">
-          <button className="preset-btn" onClick={() => onLoadPreset("radici")}>
-            <span className="p-num">04</span><span className="p-name">Radici</span><span className="p-tag">tematico</span>
-          </button>
-          <button className="preset-btn" onClick={() => onLoadPreset("sakura")}>
-            <span className="p-num">06</span><span className="p-name">Sakura</span><span className="p-tag">fusion</span>
-          </button>
-          <button className="preset-btn" onClick={() => onLoadPreset("terraemare")}>
-            <span className="p-num">08</span><span className="p-name">Terra e Mare</span><span className="p-tag">fusion</span>
-          </button>
+          {presets.map(p => (
+            <button key={p.key} className="preset-btn" onClick={() => onLoadPreset(p.key)}>
+              <span className="p-num">{p.num}</span><span className="p-name">{p.name}</span><span className="p-tag">{p.tag}</span>
+            </button>
+          ))}
         </div>
         <button className="reset-btn" onClick={onReset}>↺ Nuovo menù vuoto</button>
       </div>
@@ -155,6 +183,9 @@ function Form({ menu, setMenu, variant, setVariant, onLoadPreset, onReset, onPri
               <option value="fusion">fusion</option>
               <option value="monoprodotto">monoprodotto</option>
               <option value="stagionale">stagionale</option>
+              <option value="signature">signature</option>
+              <option value="cocktail">cocktail</option>
+              <option value="food">food</option>
             </select>
           </label>
           <label className="field">
@@ -246,8 +277,10 @@ function Form({ menu, setMenu, variant, setVariant, onLoadPreset, onReset, onPri
       </div>
 
       <div className="form-foot">
-        <a href="Brand Guidelines.html">← Brand Guidelines</a>
-        <span>v 1.2</span>
+        {C && C.id !== "dalentini"
+          ? <a href="index.html#consulenza">← Consulenza</a>
+          : <a href="Brand Guidelines.html">← Brand Guidelines</a>}
+        <span>v 1.3</span>
       </div>
     </aside>
   );
@@ -284,6 +317,19 @@ function DishEditor({ i, dish, total, isNarrative, isImage, onChange, onToggleAl
           value={dish.name}
           onChange={e => onChange("name", e.target.value)}
           placeholder="Tartare di tonno rosso…" />
+      </label>
+
+      <label className="field field-price">
+        <span className="field-label">
+          Prezzo voce (€)
+          <span className="field-flag">opzionale · es. menù bar</span>
+        </span>
+        <input
+          type="number"
+          step="0.5"
+          value={dish.price ?? ""}
+          onChange={e => onChange("price", e.target.value === "" ? null : Number(e.target.value))}
+          placeholder="—" />
       </label>
 
       <label className="field">

@@ -1,8 +1,8 @@
 // DaLentini — service worker (offline-first)
-const CACHE = 'lentini-v1.0.0';
+const CACHE = 'lentini-v1.1.0';
 const ASSETS = [
   './', './index.html', './Brand%20Guidelines.html', './Menu%20Generator.html',
-  './menu-data.js', './menu-generator.css',
+  './clients.js', './menu-data.js', './menu-sheets.jsx', './menu-form.jsx', './menu-generator.css',
   './icon-192.png', './icon-512.png', './icon-512-maskable.png', './manifest.webmanifest'
 ];
 self.addEventListener('install', e => {
