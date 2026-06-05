@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>DaLentini · Generatore Menù</title>
+<title>Generatore Menù · Consulenza</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,6 +27,7 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
+<script src="clients.js"></script>
 <script src="menu-data.js"></script>
 <script type="text/babel" src="menu-sheets.jsx"></script>
 <script type="text/babel" src="menu-form.jsx"></script>
@@ -34,16 +35,40 @@
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback } = React;
 
+// ---- client-aware loaders ----
+function readClientFromURL(){
+  try{
+    const p = new URLSearchParams(location.search).get("client");
+    if (p && CLIENTS[p]) return p;
+  } catch(e){}
+  return null;
+}
+function loadMenuFor(clientId){
+  try{
+    let saved = localStorage.getItem("menu." + clientId);
+    // migrazione dalle vecchie chiavi (solo casa)
+    if (!saved && clientId === "dalentini") saved = localStorage.getItem("dalentini.menu");
+    if (saved) return normalizeMenu(JSON.parse(saved));
+  } catch(e){}
+  const cl = getClient(clientId);
+  const key = cl.defaultPreset;
+  if (key && PRESET_MENUS[key]) return JSON.parse(JSON.stringify(PRESET_MENUS[key]));
+  return JSON.parse(JSON.stringify(EMPTY_MENU));
+}
+function loadVariantFor(clientId){
+  return localStorage.getItem("variant." + clientId)
+      || (clientId === "dalentini" && localStorage.getItem("dalentini.variant"))
+      || "contemporaneo";
+}
+
 function App(){
   // ---- state ----
-  const [menu, setMenu] = useState(() => {
-    try{
-      const saved = localStorage.getItem("dalentini.menu");
-      if (saved) return normalizeMenu(JSON.parse(saved));
-    } catch(e){}
-    return JSON.parse(JSON.stringify(PRESET_MENUS.radici));
-  });
-  const [variant, setVariant] = useState(() => localStorage.getItem("dalentini.variant") || "contemporaneo");
+  const [clientId, setClientId] = useState(() =>
+    readClientFromURL() || localStorage.getItem("active.client") || DEFAULT_CLIENT);
+  const client = getClient(clientId);
+
+  const [menu, setMenu] = useState(() => loadMenuFor(clientId));
+  const [variant, setVariant] = useState(() => loadVariantFor(clientId));
 
   const SHEETS = {
     classico: MenuClassico,
@@ -63,13 +88,32 @@ function App(){
   const [zoom, setZoom] = useState(0.55);
   const previewRef = useRef(null);
 
-  // ---- persistence ----
+  // ---- client: font + url + persistenza attivo ----
   useEffect(() => {
-    try{ localStorage.setItem("dalentini.menu", JSON.stringify(menu)); } catch(e){}
-  }, [menu]);
+    applyClientFonts(client);
+    try{ localStorage.setItem("active.client", clientId); } catch(e){}
+    try{
+      const url = new URL(location.href);
+      url.searchParams.set("client", clientId);
+      history.replaceState(null, "", url);
+    } catch(e){}
+  }, [clientId]);
+
+  // ---- persistence (per cliente) ----
   useEffect(() => {
-    localStorage.setItem("dalentini.variant", variant);
-  }, [variant]);
+    try{ localStorage.setItem("menu." + clientId, JSON.stringify(menu)); } catch(e){}
+  }, [menu, clientId]);
+  useEffect(() => {
+    try{ localStorage.setItem("variant." + clientId, variant); } catch(e){}
+  }, [variant, clientId]);
+
+  // ---- switch client → carica il suo menù + variante ----
+  const switchClient = useCallback((id) => {
+    if (!CLIENTS[id] || id === clientId) return;
+    setMenu(loadMenuFor(id));
+    setVariant(loadVariantFor(id));
+    setClientId(id);
+  }, [clientId]);
 
   // ---- preview auto-fit ----
   useEffect(() => {
@@ -94,7 +138,7 @@ function App(){
 
   // ---- actions ----
   const loadPreset = (key) => {
-    setMenu(JSON.parse(JSON.stringify(PRESET_MENUS[key])));
+    if (PRESET_MENUS[key]) setMenu(JSON.parse(JSON.stringify(PRESET_MENUS[key])));
   };
   const resetMenu = () => {
     if (confirm("Sostituire il menù corrente con un menu vuoto?")){
@@ -102,13 +146,14 @@ function App(){
     }
   };
   const exportMenu = (kind) => {
+    const prefix = client.id;
     if (kind === "json"){
       const blob = new Blob([JSON.stringify(menu, null, 2)], { type: "application/json" });
-      downloadBlob(blob, `dalentini-${slug(menu.name)}.json`);
+      downloadBlob(blob, `${prefix}-${slug(menu.name)}.json`);
     } else if (kind === "html"){
-      const html = buildStandaloneHTML(menu, variant);
+      const html = buildStandaloneHTML(menu, variant, clientId);
       const blob = new Blob([html], { type: "text/html" });
-      downloadBlob(blob, `dalentini-${slug(menu.name)}.html`);
+      downloadBlob(blob, `${prefix}-${slug(menu.name)}.html`);
     }
   };
   const printMenu = () => window.print();
@@ -117,23 +162,25 @@ function App(){
   const zoomOut = () => setZoom(z => Math.max(0.3, Math.round((z - 0.05) * 100) / 100));
 
   return (
-    <div className="app">
+    <div className="app" data-client={clientId}>
       <Form
         menu={menu}
         setMenu={setMenu}
         variant={variant}
         setVariant={setVariant}
+        client={client}
+        setClient={switchClient}
         onLoadPreset={loadPreset}
         onReset={resetMenu}
         onPrint={printMenu}
         onExport={exportMenu}
       />
-      <div className="preview-pane" ref={previewRef}>
+      <div className="preview-pane" ref={previewRef} data-client={clientId}>
         <div className="preview-toolbar">
           <div className="ptb-dot"></div>
           <span>Anteprima A4 · 210 × 297 mm</span>
           <div className="ptb-spacer"></div>
-          <span>Variante {VLABELS[variant]}</span>
+          <span>{client.name} · Variante {VLABELS[variant]}</span>
           <div className="ptb-spacer"></div>
           <div className="ptb-zoom">
             <button onClick={zoomOut} title="Zoom out">−</button>
@@ -142,7 +189,7 @@ function App(){
           </div>
         </div>
         <div className="sheet-stack" style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}>
-          <SheetComponent menu={menu} />
+          <SheetComponent menu={menu} client={client} />
         </div>
       </div>
     </div>
@@ -167,11 +214,13 @@ function slug(s){
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
-function buildStandaloneHTML(menu, variant){
+function buildStandaloneHTML(menu, variant, clientId){
+  const cl = getClient(clientId);
+  const clientFonts = cl.fonts ? `\n<link href="${cl.fonts}" rel="stylesheet">` : "";
   return `<!DOCTYPE html>
 <html lang="it"><head><meta charset="UTF-8">
-<title>${menu.name} · DaLentini</title>
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<title>${menu.name} · ${cl.name}</title>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">${clientFonts}
 <link rel="stylesheet" href="menu-generator.css">
 <style>body{background:white;overflow:visible;height:auto}#root{display:block;height:auto}.sheet{transform:none}.page-A4{margin:0 auto 24px;box-shadow:0 8px 24px rgba(0,0,0,.12)}@media print{.page-A4{box-shadow:none;page-break-after:always;page-break-inside:avoid}.page-A4:last-child{page-break-after:avoid}}</style>
 </head><body>
@@ -179,13 +228,15 @@ function buildStandaloneHTML(menu, variant){
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js"><\/script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"><\/script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"><\/script>
+<script src="clients.js"><\/script>
 <script src="menu-data.js"><\/script>
 <script type="text/babel" src="menu-sheets.jsx"><\/script>
 <script type="text/babel">
 const MENU = ${JSON.stringify(menu, null, 2)};
+const CLIENT = getClient(${JSON.stringify(clientId)});
 const SheetMap = { classico: MenuClassico, contemporaneo: MenuContemporaneo, tabula: MenuTabula, editoriale: MenuEditoriale, diario: MenuDiario };
 const Sheet = SheetMap[${JSON.stringify(variant)}] || MenuContemporaneo;
-ReactDOM.createRoot(document.getElementById("root")).render(<Sheet menu={MENU} />);
+ReactDOM.createRoot(document.getElementById("root")).render(<Sheet menu={MENU} client={CLIENT} />);
 <\/script>
 </body></html>`;
 }
