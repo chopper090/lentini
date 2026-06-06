@@ -5,20 +5,21 @@
    ============================================================ */
 
 :root{
-  color-scheme: light;
-  --cream:#F5EDD8;
-  --cream-deep:#EFE5C9;
-  --white:#FFFFFF;
-  --ink:#1A1A18;
-  --gold:#C4A86A;
-  --gold-soft:#D9C28B;
-  --warm-grey:#8C8880;
-  --warm-grey-light:#B8B4AB;
-  /* Editor "desk" behind the A4 sheet — cream white, not dark */
-  --desk:#EFE8D6;
-  --desk-deep:#E6DDC6;
-  --line-soft: color-mix(in srgb, var(--ink) 12%, transparent);
-  --line-softer: color-mix(in srgb, var(--ink) 6%, transparent);
+  /* Chrome dell'editor (sidebar, toolbar, desk): ANTRACITE, vicino al nero.
+     Il foglio A4 resta carta chiara — vedi `.sheet`, che ridefinisce i token. */
+  color-scheme: dark;
+  --cream:#212427;          /* superficie pannello (sidebar/toolbar) */
+  --cream-deep:#2A2E32;     /* superficie sollevata / campi input */
+  --white:#15171A;          /* base "vetro" della toolbar */
+  --ink:#ECEAE3;            /* testo chiaro */
+  --gold:#CBB078;
+  --gold-soft:#DCC58F;
+  --warm-grey:#9CA1A6;
+  --warm-grey-light:#565B60;
+  --desk:#17191B;           /* piano dietro al foglio: antracite */
+  --desk-deep:#0F1012;
+  --line-soft: color-mix(in srgb, var(--ink) 14%, transparent);
+  --line-softer: color-mix(in srgb, var(--ink) 7%, transparent);
 
   --f-display:'Palace Script MT','Pinyon Script', cursive;
   --f-serif:'TeX Gyre Pagella','Palatino Linotype', Palatino,'URW Palladio L','Book Antiqua','Cormorant Garamond', serif;
@@ -27,26 +28,8 @@
   --f-mono:'JetBrains Mono', ui-monospace, monospace;
 }
 
-/* ============================================================
-   TEMA SCURO (opzionale, via toggle) — rimappa solo la "chrome"
-   dell'editor. Il foglio A4 resta sempre carta chiara: vedi `.sheet`.
-   ============================================================ */
-:root[data-theme="dark"]{
-  color-scheme: dark;
-  --cream:#23211B;          /* superfici pannello */
-  --cream-deep:#2E2B22;     /* superfici sollevate / input */
-  --white:#2A2820;          /* base per il "vetro" della toolbar */
-  --ink:#F3ECD9;            /* testo primario (chiaro) */
-  --gold:#D8BE7E;
-  --gold-soft:#E7D4A6;
-  --warm-grey:#A39B89;
-  --warm-grey-light:#6E6757;
-  --desk:#16150F;           /* piano dietro al foglio */
-  --desk-deep:#100F0A;
-}
-
 *{ box-sizing: border-box; margin: 0; padding: 0;}
-/* Opt-out dal dark-mode automatico del browser: il default resta chiaro */
+/* darkreader-lock + color-scheme gestiscono il dark-mode forzato del browser */
 html, body{ height: 100%; overflow: hidden; }
 body{
   font-family: var(--f-body);
@@ -470,7 +453,7 @@ body{
 .preview-pane{
   background: var(--desk);
   background-image:
-    radial-gradient(ellipse at top, color-mix(in srgb, var(--white) 55%, transparent), transparent 60%),
+    radial-gradient(130% 80% at 50% -12%, color-mix(in srgb, var(--ink) 6%, transparent), transparent 60%),
     linear-gradient(180deg, var(--desk) 0%, var(--desk-deep) 100%);
   overflow: auto;
   padding: 36px 0;
@@ -549,7 +532,7 @@ body{
   width: 210mm;
   height: 297mm;
   background: var(--cream);
-  box-shadow: 0 18px 44px rgba(60,50,28,0.18), 0 3px 10px rgba(60,50,28,0.12);
+  box-shadow: 0 22px 55px rgba(0,0,0,0.55), 0 4px 14px rgba(0,0,0,0.40);
   border: 1px solid color-mix(in srgb, var(--ink) 7%, transparent);
   color: var(--ink);
   position: relative;
@@ -558,8 +541,9 @@ body{
 }
 
 .sheet{
-  /* Il foglio è SEMPRE carta chiara, anche con la chrome in tema scuro.
+  /* Il foglio è SEMPRE carta chiara (in light), indipendente dalla chrome scura.
      (Il cliente "il baretto" sovrascrive con la sua palette, più specifico.) */
+  color-scheme: light;
   --cream:#F5EDD8;
   --cream-deep:#EFE5C9;
   --white:#FFFFFF;
@@ -2066,16 +2050,10 @@ body{
 /* Prezzo voce in arancio brand */
 .sheet[data-client="baretto"] .dish-price{ color: var(--bt-orange); }
 
-/* Editor: backdrop anteprima — cielo chiaro del brand (niente navy scuro) */
-.app[data-client="baretto"] .preview-pane{
-  background: #EAF3FB;
-  background-image:
-    radial-gradient(ellipse at top, rgba(255,255,255,0.62), transparent 60%),
-    linear-gradient(180deg, #EAF3FB 0%, #DBEAF6 100%);
-}
+/* il baretto: stesso desk antracite degli altri, ombra del foglio appena blu */
 .app[data-client="baretto"] .page-A4{
-  box-shadow: 0 18px 44px rgba(18,104,169,0.20), 0 3px 10px rgba(14,46,84,0.12);
-  border-color: color-mix(in srgb, #1268A9 14%, transparent);
+  box-shadow: 0 22px 55px rgba(0,0,0,0.55), 0 4px 14px rgba(10,30,60,0.45);
+  border-color: color-mix(in srgb, #1268A9 16%, transparent);
 }
 
 /* ============================================================
@@ -2140,4 +2118,56 @@ body{
   }
   .mobile-tab + .mobile-tab{ border-left: 1px solid var(--line-soft); }
   .mobile-tab.active{ color: var(--ink); background: var(--cream-deep); }
+}
+
+/* ============================================================
+   CANVAS IN TEMA SCURO — solo a schermo.
+   In stampa/PDF il foglio resta su carta chiara: queste regole sono
+   dentro @media screen, quindi @media print usa le regole base di .sheet.
+   ============================================================ */
+@media screen{
+  /* DaLentini — menù scuro elegante (fondo scuro, testo crema, oro) */
+  :root[data-theme="dark"] .sheet{
+    --cream:#1C1B16;
+    --cream-deep:#262419;
+    --white:#141310;
+    --ink:#F2ECDA;
+    --gold:#D8BE7E;
+    --gold-soft:#E7D4A6;
+    --warm-grey:#A49C8A;
+    --warm-grey-light:#6F6857;
+  }
+  /* il baretto — menù navy con testo chiaro (eco della sezione Distillati) */
+  :root[data-theme="dark"] .sheet[data-client="baretto"]{
+    --cream: var(--bt-ink);
+    --cream-deep:#143A66;
+    --white:#0A2444;
+    --ink: var(--bt-sky);
+    --gold: var(--bt-orange);
+    --gold-soft: color-mix(in srgb, var(--bt-orange) 60%, #FFFFFF);
+    --warm-grey:#9DB6D6;
+    --warm-grey-light:#5E7CA6;
+  }
+  /* onde più leggibili sul navy */
+  :root[data-theme="dark"] .sheet[data-client="baretto"] .cover-wave-c,
+  :root[data-theme="dark"] .sheet[data-client="baretto"] .cover-wave-m,
+  :root[data-theme="dark"] .sheet[data-client="baretto"] .tab-wave{
+    color:#57A8E6;
+  }
+}
+
+/* ============================================================
+   DRAG & DROP COPERTINA — maniglie + guide di allineamento
+   ============================================================ */
+.draggable.editable{ cursor: grab; }
+.draggable.editable:hover{ outline: 1px dashed color-mix(in srgb, var(--gold) 75%, transparent); outline-offset: 4px; }
+.draggable.dragging{ cursor: grabbing; outline: 1px solid var(--gold); }
+.cover-brand-wrap{ display: block; }
+.drag-guide-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+.drag-guide{ position: fixed; background: #E8528A; box-shadow: 0 0 0 0.5px rgba(232,82,138,.4); }
+.drag-guide.v{ width: 1px; }
+.drag-guide.h{ height: 1px; }
+@media print{
+  .draggable.editable{ cursor: default; outline: none !important; }
+  .drag-guide-layer{ display: none !important; }
 }

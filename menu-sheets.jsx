@@ -4,7 +4,124 @@
 // Client-aware: brand, logo, palette e font dipendono dal cliente.
 // ============================================================
 
-const { useState, useEffect, useRef, useMemo } = React;
+const { useState, useEffect, useRef, useMemo, useContext } = React;
+
+// ============================================================
+// Drag & drop della copertina — riposizionamento libero con
+// guide di allineamento (cornice + altri elementi) e snap.
+// Le posizioni (offset in px) vivono in menu.layout[variante][id]
+// e valgono anche in stampa/PDF (sono trasformazioni inline).
+// ============================================================
+const DragCtx = React.createContext(null);
+
+function Draggable({ id, offset, children }){
+  const ctx = useContext(DragCtx);
+  const ref = useRef(null);
+  const off = offset || { x: 0, y: 0 };
+  const child = React.Children.only(children);
+  const transform = (off.x || off.y) ? `translate(${off.x}px, ${off.y}px)` : null;
+  const baseStyle = child.props.style || {};
+
+  // Non editabile (stampa/export o nessun provider): applica solo l'offset.
+  if (!ctx || !ctx.editable){
+    return React.cloneElement(child, {
+      "data-drag-id": id,
+      style: transform ? { ...baseStyle, transform } : baseStyle
+    });
+  }
+
+  const { zoom, onCommit } = ctx;
+
+  const onPointerDown = (e) => {
+    if (e.button != null && e.button !== 0) return;
+    const el = ref.current;
+    const page = el && el.closest(".page-A4");
+    if (!page) return;
+    e.preventDefault();
+    e.stopPropagation();
+    try { el.setPointerCapture(e.pointerId); } catch(_) {}
+    el.classList.add("dragging");
+
+    const start = { x: e.clientX, y: e.clientY };
+    const base = { x: off.x, y: off.y };
+    const pageRect = page.getBoundingClientRect();
+    const z = (zoom && zoom > 0) ? zoom : 1;
+    const TH = 6; // soglia di snap in px schermo
+
+    // bersagli di allineamento (coord. schermo): cornice + altri draggable
+    const vx = [pageRect.left, pageRect.left + pageRect.width / 2, pageRect.right];
+    const hy = [pageRect.top, pageRect.top + pageRect.height / 2, pageRect.bottom];
+    page.querySelectorAll(".draggable").forEach(d => {
+      if (d === el) return;
+      const r = d.getBoundingClientRect();
+      vx.push(r.left, r.left + r.width / 2, r.right);
+      hy.push(r.top, r.top + r.height / 2, r.bottom);
+    });
+
+    const layer = document.getElementById("dragGuideLayer");
+    const clearGuides = () => { if (layer) layer.innerHTML = ""; };
+    const drawGuide = (orient, pos) => {
+      if (!layer) return;
+      const line = document.createElement("div");
+      line.className = "drag-guide " + orient;
+      if (orient === "v"){ line.style.left = pos + "px"; line.style.top = pageRect.top + "px"; line.style.height = pageRect.height + "px"; }
+      else { line.style.top = pos + "px"; line.style.left = pageRect.left + "px"; line.style.width = pageRect.width + "px"; }
+      layer.appendChild(line);
+    };
+
+    let cur = { ...base };
+
+    const onMove = (ev) => {
+      let nx = base.x + (ev.clientX - start.x) / z;
+      let ny = base.y + (ev.clientY - start.y) / z;
+      el.style.transform = `translate(${nx}px, ${ny}px)`;
+      const r = el.getBoundingClientRect();
+      clearGuides();
+
+      const exPts = [r.left, r.left + r.width / 2, r.right];
+      let bestX = null;
+      vx.forEach(line => exPts.forEach(p => {
+        const d = line - p;
+        if (Math.abs(d) <= TH && (bestX === null || Math.abs(d) < Math.abs(bestX.d))) bestX = { d, line };
+      }));
+      if (bestX){ nx += bestX.d / z; drawGuide("v", bestX.line); }
+
+      const eyPts = [r.top, r.top + r.height / 2, r.bottom];
+      let bestY = null;
+      hy.forEach(line => eyPts.forEach(p => {
+        const d = line - p;
+        if (Math.abs(d) <= TH && (bestY === null || Math.abs(d) < Math.abs(bestY.d))) bestY = { d, line };
+      }));
+      if (bestY){ ny += bestY.d / z; drawGuide("h", bestY.line); }
+
+      el.style.transform = `translate(${nx}px, ${ny}px)`;
+      cur = { x: Math.round(nx), y: Math.round(ny) };
+    };
+
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      el.classList.remove("dragging");
+      clearGuides();
+      onCommit(id, cur);
+    };
+
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  };
+
+  return React.cloneElement(child, {
+    ref,
+    "data-drag-id": id,
+    className: ((child.props.className || "") + " draggable editable").trim(),
+    style: transform ? { ...baseStyle, transform } : baseStyle,
+    onPointerDown,
+    title: "Trascina per riposizionare"
+  });
+}
+
+// offset salvato per (variante, id)
+const layoutOf = (menu, variant) => (menu && menu.layout && menu.layout[variant]) || {};
 
 // ---- Utility ----
 const formatDate = (iso) => {
@@ -110,6 +227,7 @@ function MenuClassico({ menu, client }) {
   const C = useClient(client);
   const coast = C.decor === "coast";
   const portate = menu.dishes.length;
+  const L = layoutOf(menu, "classico");
   return (
     <div className="sheet sheet-classico" data-client={C.id} data-screen-label="Menu Classico">
       <div className="page-A4 cover-page-c">
@@ -117,20 +235,20 @@ function MenuClassico({ menu, client }) {
         <div className="cover-chef-c">{C.role} · {menu.chef}</div>
 
         <div className="cover-center-c">
-          <div className="cover-stamp-c">{C.stamp}</div>
-          <div className="cover-wm-c"><Brand client={C} /></div>
+          <Draggable id="subtitle" offset={L.subtitle}><div className="cover-stamp-c">{C.stamp}</div></Draggable>
+          <Draggable id="logo" offset={L.logo}><div className="cover-wm-c"><Brand client={C} /></div></Draggable>
           <div className="cover-ornament-c">
             <span className="orn-rule"></span>
             <span className="orn-dot">·</span>
             <span className="orn-rule"></span>
           </div>
-          <div className="cover-menu-name-c">{menu.name || "—"}</div>
+          <Draggable id="title" offset={L.title}><div className="cover-menu-name-c">{menu.name || "—"}</div></Draggable>
           <div className="cover-meta-c">
             {menu.category && <span className="cover-cat-c">menu {menu.category}</span>}
           </div>
-          <div className="cover-portate-c">
+          <Draggable id="stats" offset={L.stats}><div className="cover-portate-c">
             {courseNumber(portate-1)} portate <span className="dot-sep">·</span> {formatPrice(menu.price)}
-          </div>
+          </div></Draggable>
           {menu.chefNote && (
             <p className="cover-note-c">{menu.chefNote}</p>
           )}
@@ -193,6 +311,7 @@ function MenuContemporaneo({ menu, client }) {
   const coast = C.decor === "coast";
   const hasLogo = C.logo && C.logo.type === "image";
   const portate = menu.dishes.length;
+  const L = layoutOf(menu, "contemporaneo");
   return (
     <div className="sheet sheet-contemporaneo" data-client={C.id} data-screen-label="Menu Contemporaneo">
       <div className="page-A4 cover-page-m">
@@ -203,11 +322,11 @@ function MenuContemporaneo({ menu, client }) {
         </div>
 
         <div className="cover-body-m">
-          {hasLogo && <Brand client={C} className="cover-brand-m" />}
-          <div className="cover-cat-m">— menu {menu.category} —</div>
-          <h1 className="cover-name-m">{menu.name || "—"}</h1>
+          {hasLogo && <Draggable id="logo" offset={L.logo}><div className="cover-brand-wrap"><Brand client={C} className="cover-brand-m" /></div></Draggable>}
+          <Draggable id="subtitle" offset={L.subtitle}><div className="cover-cat-m">— menu {menu.category} —</div></Draggable>
+          <Draggable id="title" offset={L.title}><h1 className="cover-name-m">{menu.name || "—"}</h1></Draggable>
           <div className="cover-rule-m"></div>
-          <div className="cover-stats-m">
+          <Draggable id="stats" offset={L.stats}><div className="cover-stats-m">
             <div className="stat-m">
               <span className="stat-label-m">Portate</span>
               <span className="stat-val-m">{courseNumber(portate - 1)}</span>
@@ -220,7 +339,7 @@ function MenuContemporaneo({ menu, client }) {
               <span className="stat-label-m">Coperti</span>
               <span className="stat-val-m">{String(menu.seats).padStart(2,"0")}</span>
             </div>
-          </div>
+          </div></Draggable>
           {menu.chefNote && (
             <p className="cover-note-m">«&nbsp;{menu.chefNote}&nbsp;»</p>
           )}
@@ -521,6 +640,6 @@ function romanize(n){
 
 Object.assign(window, {
   MenuClassico, MenuContemporaneo, MenuTabula, MenuEditoriale, MenuDiario,
-  Brand, DishPrice, CoastWave, Citrus,
+  Brand, DishPrice, CoastWave, Citrus, Draggable, DragCtx,
   formatDate, formatPrice, ALLERGENI
 });
