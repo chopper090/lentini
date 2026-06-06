@@ -71,7 +71,7 @@ const AllergensInline = ({ list }) => {
   if (!list || list.length === 0) return null;
   return (
     <span className="dish-allergens">
-      ({list.sort((a,b)=>a-b).join(" · ")})
+      ({[...list].sort((a,b)=>a-b).join(" · ")})
     </span>
   );
 };
@@ -405,7 +405,7 @@ function MenuEditoriale({ menu, client }) {
                     {d.allergens && d.allergens.length > 0 && (
                       <div className="ed-dish-allergens">
                         <span className="ed-allg-label">Allergeni</span>
-                        <span className="ed-allg-list">{d.allergens.sort((a,b)=>a-b).join(" · ")}</span>
+                        <span className="ed-allg-list">{[...d.allergens].sort((a,b)=>a-b).join(" · ")}</span>
                       </div>
                     )}
                   </div>

@@ -27,9 +27,27 @@
   --f-mono:'JetBrains Mono', ui-monospace, monospace;
 }
 
+/* ============================================================
+   TEMA SCURO (opzionale, via toggle) — rimappa solo la "chrome"
+   dell'editor. Il foglio A4 resta sempre carta chiara: vedi `.sheet`.
+   ============================================================ */
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --cream:#23211B;          /* superfici pannello */
+  --cream-deep:#2E2B22;     /* superfici sollevate / input */
+  --white:#2A2820;          /* base per il "vetro" della toolbar */
+  --ink:#F3ECD9;            /* testo primario (chiaro) */
+  --gold:#D8BE7E;
+  --gold-soft:#E7D4A6;
+  --warm-grey:#A39B89;
+  --warm-grey-light:#6E6757;
+  --desk:#16150F;           /* piano dietro al foglio */
+  --desk-deep:#100F0A;
+}
+
 *{ box-sizing: border-box; margin: 0; padding: 0;}
-/* Opt out of browser auto/forced dark-mode: keep cream rendering as cream */
-html, body{ height: 100%; overflow: hidden; color-scheme: light; }
+/* Opt-out dal dark-mode automatico del browser: il default resta chiaro */
+html, body{ height: 100%; overflow: hidden; }
 body{
   font-family: var(--f-body);
   font-weight: 300;
@@ -540,6 +558,16 @@ body{
 }
 
 .sheet{
+  /* Il foglio è SEMPRE carta chiara, anche con la chrome in tema scuro.
+     (Il cliente "il baretto" sovrascrive con la sua palette, più specifico.) */
+  --cream:#F5EDD8;
+  --cream-deep:#EFE5C9;
+  --white:#FFFFFF;
+  --ink:#1A1A18;
+  --gold:#C4A86A;
+  --gold-soft:#D9C28B;
+  --warm-grey:#8C8880;
+  --warm-grey-light:#B8B4AB;
   display: flex;
   flex-direction: column;
   gap: 36px;
@@ -2048,4 +2076,68 @@ body{
 .app[data-client="baretto"] .page-A4{
   box-shadow: 0 18px 44px rgba(18,104,169,0.20), 0 3px 10px rgba(14,46,84,0.12);
   border-color: color-mix(in srgb, #1268A9 14%, transparent);
+}
+
+/* ============================================================
+   THEME TOGGLE (toolbar) + ACCESSIBILITÀ
+   ============================================================ */
+.ptb-theme{
+  width: 26px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 1px solid var(--line-soft);
+  color: var(--warm-grey);
+  cursor: pointer;
+  padding: 0;
+  font-size: 12px; line-height: 1;
+  transition: all .15s ease;
+}
+.ptb-theme:hover{ background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+/* Focus visibile per la navigazione da tastiera */
+:where(button, a, input, textarea, select):focus-visible{
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; }
+}
+
+/* ============================================================
+   MOBILE TAB BAR (solo su schermi stretti)
+   ============================================================ */
+.mobile-tabs{ display: none; }
+
+/* ============================================================
+   RESPONSIVE — sotto 860px: una colonna + tab Editor/Anteprima
+   ============================================================ */
+@media (max-width: 860px){
+  .app{ grid-template-columns: 1fr; }
+  .app[data-mview="editor"] .preview-pane{ display: none; }
+  .app[data-mview="preview"] .form-panel{ display: none; }
+  .form-panel{ border-right: none; padding-bottom: 88px; }
+  .preview-pane{ padding-bottom: 88px; }
+
+  .preview-toolbar{ font-size: 8.5px; gap: 10px; padding: 9px 12px; }
+  .preview-toolbar .ptb-hide-sm{ display: none; }
+
+  .field-grid{ grid-template-columns: 1fr; }
+
+  .mobile-tabs{
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--cream);
+    border-top: 1px solid var(--line-soft);
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.12);
+  }
+  .mobile-tab{
+    background: transparent; border: none;
+    padding: 15px 10px;
+    font-family: var(--f-mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--warm-grey); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .mobile-tab + .mobile-tab{ border-left: 1px solid var(--line-soft); }
+  .mobile-tab.active{ color: var(--ink); background: var(--cream-deep); }
 }
