@@ -9,6 +9,21 @@
 <meta name="darkreader-lock">
 <!-- Applica il tema salvato prima del primo paint (niente flash) -->
 <script>(function(){try{var t=localStorage.getItem('ui.theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
+<!-- Service worker + auto-aggiornamento PWA -->
+<script>
+if('serviceWorker' in navigator){
+  addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').then(function(reg){
+      reg.addEventListener('updatefound',function(){
+        var nw=reg.installing; if(!nw) return;
+        nw.addEventListener('statechange',function(){
+          if(nw.state==='activated' && navigator.serviceWorker.controller) location.reload();
+        });
+      });
+    }).catch(function(){});
+  });
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">

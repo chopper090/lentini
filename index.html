@@ -12,7 +12,21 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="DaLentini">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+<script>
+if('serviceWorker' in navigator){
+  addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').then(function(reg){
+      // Quando una nuova versione viene attivata, ricarica una volta sola
+      reg.addEventListener('updatefound',function(){
+        var nw=reg.installing; if(!nw) return;
+        nw.addEventListener('statechange',function(){
+          if(nw.state==='activated' && navigator.serviceWorker.controller) location.reload();
+        });
+      });
+    }).catch(function(){});
+  });
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Poppins:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
