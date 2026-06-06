@@ -258,17 +258,19 @@ const EMPTY_MENU = {
   chef: "Marco Lentini",
   seats: 8,
   chefNote: "",
+  layout: {},   // posizioni drag&drop per variante: { [variante]: { [id]: {x,y} } }
   dishes: [
     { name: "", desc: "", story: "", image: null, price: null, allergens: [] }
   ]
 };
 
-// Migration helper — old menu data may lack 'story'/'image'
+// Migration helper — old menu data may lack 'story'/'image'/'layout'
 function normalizeMenu(m){
   if (!m) return EMPTY_MENU;
   return {
     ...EMPTY_MENU,
     ...m,
+    layout: m.layout || {},
     dishes: (m.dishes || []).map(d => ({
       name: d.name || "",
       desc: d.desc || "",

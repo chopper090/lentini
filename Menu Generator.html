@@ -164,6 +164,26 @@ function App(){
   // ricalcola quando l'anteprima torna visibile (mobile) o cambia variante
   useEffect(() => { fitZoom(); }, [mview, variant, fitZoom]);
 
+  // ---- layout drag&drop (copertina) ----
+  const setLayoutOffset = useCallback((id, off) => {
+    setMenu(m => {
+      const layout = { ...(m.layout || {}) };
+      const cur = { ...(layout[variant] || {}) };
+      if (!off || (off.x === 0 && off.y === 0)) delete cur[id]; else cur[id] = off;
+      layout[variant] = cur;
+      return { ...m, layout };
+    });
+  }, [variant]);
+  const dragValue = { editable: true, zoom, onCommit: setLayoutOffset };
+  const hasLayout = !!(menu.layout && menu.layout[variant] && Object.keys(menu.layout[variant]).length);
+  const resetLayout = () => {
+    setMenu(m => {
+      const layout = { ...(m.layout || {}) };
+      delete layout[variant];
+      return { ...m, layout };
+    });
+  };
+
   // ---- actions ----
   const loadPreset = (key) => {
     if (PRESET_MENUS[key]) setMenu(JSON.parse(JSON.stringify(PRESET_MENUS[key])));
@@ -210,11 +230,15 @@ function App(){
           <div className="ptb-spacer ptb-hide-sm"></div>
           <span>{client.name} · {VLABELS[variant]}</span>
           <div className="ptb-spacer"></div>
+          {hasLayout && (
+            <button className="ptb-theme" onClick={resetLayout}
+              title="Reimposta le posizioni della copertina" aria-label="Reimposta posizioni copertina">⤺</button>
+          )}
           <button
             className="ptb-theme"
             onClick={() => setTheme(t => (t === "light" ? "dark" : "light"))}
-            title={theme === "light" ? "Passa al tema scuro" : "Passa al tema chiaro"}
-            aria-label={theme === "light" ? "Passa al tema scuro" : "Passa al tema chiaro"}>
+            title={theme === "light" ? "Menù scuro (a schermo)" : "Menù chiaro"}
+            aria-label={theme === "light" ? "Passa al menù scuro" : "Passa al menù chiaro"}>
             {theme === "light" ? "☾" : "☀"}
           </button>
           <div className="ptb-spacer"></div>
@@ -225,9 +249,12 @@ function App(){
           </div>
         </div>
         <div className="sheet-stack" style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}>
-          <SheetComponent menu={menu} client={client} />
+          <DragCtx.Provider value={dragValue}>
+            <SheetComponent menu={menu} client={client} />
+          </DragCtx.Provider>
         </div>
       </div>
+      <div className="drag-guide-layer" id="dragGuideLayer" aria-hidden="true"></div>
 
       <nav className="mobile-tabs" aria-label="Sezioni">
         <button className={"mobile-tab " + (mview === "editor" ? "active" : "")}
